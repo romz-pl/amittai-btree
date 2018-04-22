@@ -65,31 +65,32 @@ TEST( btree, more_items )
 
 }
 
-/*
+
 TEST( btree, reverse_erase )
 {
-    const std::uint32_t pool_size = 1000;
+    const int order = 10;
     const int item_no = 200;
-    Tree tree( pool_size );
+    BPlusTree tree( order );
 
     for( int i = 0; i < item_no; i++ )
     {
-        ASSERT_NO_THROW( tree.insert( Key( i ) ) );
+        ASSERT_NO_THROW( tree.insert( i, i ) );
     }
 
-    for( int i = 0; i < item_no; i++ )
-    {
-        Node* na = tree.search( Key( i ) );
-        ASSERT_TRUE( na );
-    }
+//    for( int i = 0; i < item_no; i++ )
+//    {
+//        Node* na = tree.search( Key( i ) );
+//        ASSERT_TRUE( na );
+//    }
 
     for( int i = item_no - 1; i >= 0 ; i-- )
     {
-        tree.erase( Key( i ) );
+        tree.remove( i );
     }
 
 }
 
+/*
 TEST( btree, insert_search_delete )
 {
     const int item_no = 9000;
