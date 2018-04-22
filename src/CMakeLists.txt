@@ -1,7 +1,7 @@
 
 set( LIB_NAME amittai-btree )
 
-add_executable( ${LIB_NAME} 
+add_library( ${LIB_NAME} STATIC
     BPlusTree.cpp 
     Exceptions.cpp 
     InternalNode.cpp 
@@ -9,7 +9,7 @@ add_executable( ${LIB_NAME}
     Node.cpp 
     Printer.cpp 
     Record.cpp 
-    main.cpp
+#    main.cpp
 )
 
 target_include_directories( ${LIB_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src )
