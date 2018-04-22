@@ -19,8 +19,86 @@
 
 #include <iostream>
 #include <sstream>
+#include <cassert>
 #include "BPlusTree.hpp"
 #include "Definitions.hpp"
+
+void test_a();
+void test_b();
+void test_c();
+
+
+int main()
+{
+    test_c();
+    return 0;
+}
+
+void test_a()
+{
+    const int order = 10;
+    BPlusTree tree( order );
+
+
+   tree.insert( 1, 1 );
+   tree.remove( 1 );
+
+   assert( tree.isEmpty() );
+
+}
+
+void test_b()
+{
+    const int order = 10;
+    const int item_no = 100;
+    BPlusTree tree( order );
+
+    for( int i = 0; i < item_no; i++ )
+    {
+        tree.insert( i, i );
+    }
+
+    for( int i = 0; i < item_no; i++ )
+    {
+        assert( tree.search( i ) != nullptr );
+    }
+
+    for( int i = 0; i < item_no; i++ )
+    {
+        tree.remove( i );
+    }
+
+    for( int i = 0; i < item_no; i++ )
+    {
+        std::cout << i << " " << std::flush;
+        assert( tree.search( i ) == nullptr );
+    }
+
+}
+
+void test_c()
+{
+    const int order = 10;
+    const int item_no = 100;
+    BPlusTree tree( order );
+
+    for( int i = 0; i < item_no; i++ )
+    {
+        tree.insert( i, i );
+    }
+
+    for( int i = 0; i < item_no; i++ )
+    {
+        tree.remove( i );
+    }
+
+    assert( tree.isEmpty() );
+
+}
+
+
+
+/*
 
 std::string introMessage(int aOrder) {
     std::ostringstream oss;
@@ -147,3 +225,5 @@ int main(int argc, const char * argv[]) {
     }
     return 0;
 }
+*/
+

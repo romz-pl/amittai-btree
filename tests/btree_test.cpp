@@ -21,114 +21,131 @@ TEST( btree, search_empty )
     Node* nb = tree.search( Key( 1 ) );
     ASSERT_TRUE( !nb );
 }
+*/
 
 TEST( btree, one_item )
 {
-    const std::uint32_t pool_size = 100;
-    const Key k( 17 );
+    const int order = 4;
+    const int64_t k = 17;
 
-    Tree tree( pool_size );
+    BPlusTree tree( order );
 
-    ASSERT_NO_THROW( tree.insert( k ) );
-    Node* na = tree.search( k );
-    ASSERT_TRUE( na );
+    ASSERT_NO_THROW( tree.insert( k, k ) );
+    ASSERT_TRUE( tree.search( k ) != nullptr );
 
-    tree.erase( k );
-    Node* nb = tree.search( k );
-    ASSERT_TRUE( !nb );
+    tree.remove( k );
+
+    ASSERT_TRUE( tree.search( k ) == nullptr  );
+    ASSERT_TRUE( tree.isEmpty() );
 }
+
 
 TEST( btree, more_items )
 {
-    const std::uint32_t pool_size = 1000;
-    const int item_no = 200;
-    Tree tree( pool_size );
+    const int order = 10;
+    const int item_no = 2000;
+    BPlusTree tree( order );
 
     for( int i = 0; i < item_no; i++ )
     {
-        ASSERT_NO_THROW( tree.insert( Key( i ) ) );
-    }
-
-
-    for( int i = 0; i < item_no; i++ )
-    {
-        Node* na = tree.search( Key( i ) );
-        ASSERT_TRUE( na );
+        ASSERT_NO_THROW( tree.insert( i, i ) );
     }
 
     for( int i = 0; i < item_no; i++ )
     {
-        tree.erase( Key( i ) );
+        ASSERT_TRUE( tree.search( i ) != nullptr );
     }
+
+    for( int i = 0; i < item_no; i++ )
+    {
+        tree.remove( i );
+    }
+
+    for( int i = 0; i < item_no; i++ )
+    {
+        //std::cout << i << " " << std::flush;
+        ASSERT_TRUE( tree.search( i ) == nullptr );
+    }
+
+    ASSERT_TRUE( tree.isEmpty() );
 
 }
 
+
 TEST( btree, reverse_erase )
 {
-    const std::uint32_t pool_size = 1000;
-    const int item_no = 200;
-    Tree tree( pool_size );
+    const int order = 5;
+    const int item_no = 20000;
+    BPlusTree tree( order );
 
     for( int i = 0; i < item_no; i++ )
     {
-        ASSERT_NO_THROW( tree.insert( Key( i ) ) );
+        ASSERT_NO_THROW( tree.insert( i, i ) );
     }
 
     for( int i = 0; i < item_no; i++ )
     {
-        Node* na = tree.search( Key( i ) );
-        ASSERT_TRUE( na );
+        ASSERT_TRUE( tree.search( i ) != nullptr );
     }
 
     for( int i = item_no - 1; i >= 0 ; i-- )
     {
-        tree.erase( Key( i ) );
+        tree.remove( i );
     }
 
+    for( int i = 0; i < item_no; i++ )
+    {
+        // std::cout << i << " " << std::flush;
+        ASSERT_TRUE( tree.search( i ) == nullptr );
+    }
+
+    ASSERT_TRUE( tree.isEmpty() );
+
 }
+
 
 TEST( btree, insert_search_delete )
 {
     const int item_no = 9000;
     const unsigned seed = 12345;
-    std::set< Key > sset;
+    std::set< int64_t > sset;
     std::srand( seed );
-    const std::uint32_t pool_size = 50000;
+    const int order = 5;
 
-    Tree tree( pool_size );
+    BPlusTree tree( order );
 
     for( int i = 0; i < item_no; i++ )
     {
-        const Key key = Key( std::rand() );
+        const int64_t key = std::rand();
         // std::cout << key.get_value() << " " << std::flush;
         sset.insert( key );
-        ASSERT_NO_THROW( tree.insert( key ) );
+        ASSERT_NO_THROW( tree.insert( key, i ) );
     }
 
     for( auto v : sset )
     {
-        Node* na = tree.search( v );
-        ASSERT_TRUE( na );
-    }
-
-
-    for( auto v : sset )
-    {
-        tree.erase( v );
+        ASSERT_TRUE( tree.search( v ) != nullptr );
     }
 
     for( auto v : sset )
     {
-        Node* na = tree.search( v );
-        ASSERT_TRUE( !na );
+        tree.remove( v );
     }
+
+    for( auto v : sset )
+    {
+        ASSERT_TRUE( tree.search( v ) == nullptr );
+    }
+
+    ASSERT_TRUE( tree.isEmpty() );
 }
+
 
 TEST( btree, insert_random )
 {
-    std::set< Key > sset;
-    const std::uint32_t pool_size = 20000;
-    Tree tree( pool_size );
+    std::set< int64_t > sset;
+    const int order = 5;
+    BPlusTree tree( order );
 
     const double threshold = 0.6;
     const int iter_no = 2000;
@@ -142,36 +159,36 @@ TEST( btree, insert_random )
 
     for( int i = 0; i < iter_no; i++ )
     {
-        const Key key( dist_int( rng ) );
+        const int64_t key( dist_int( rng ) );
         const double x = dist_real( rng );
 
         if( x > threshold )
         {
             sset.insert( key );
-            ASSERT_NO_THROW( tree.insert( key ) );
+            ASSERT_NO_THROW( tree.insert( key, i ) );
         }
         else
         {
             sset.erase( key );
-            tree.erase( key );
+            tree.remove( key );
         }
 
         // std::cout<< sset.size() << "\n" << std::flush;
 
         for( auto v : sset )
         {
-            Node* na = tree.search( v );
-            ASSERT_TRUE( na );
+            ASSERT_TRUE( tree.search( v ) != nullptr );
         }
 
     }
 }
 
+
 TEST( btree, erase_random )
 {
-    std::set< Key > sset;
-    const std::uint32_t pool_size = 30000;
-    Tree tree( pool_size );
+    std::set< int64_t > sset;
+    const int order = 5;
+    BPlusTree tree( order );
 
     const int iter_no = 5000;
 
@@ -183,23 +200,24 @@ TEST( btree, erase_random )
 
     for( int i = 0; i < iter_no; i++ )
     {
-        const Key key( dist_int( rng ) );
+        const int64_t key( dist_int( rng ) );
         sset.insert( key );
-        ASSERT_NO_THROW( tree.insert( key ) );
+        ASSERT_NO_THROW( tree.insert( key, i ) );
     }
 
     for( auto v : sset )
     {
-        Node* na = tree.search( v );
-        ASSERT_TRUE( na );
+        ASSERT_TRUE( tree.search( v ) != nullptr );
     }
 
     while( !sset.empty() )
     {
-        const Key key( dist_int( rng ) );
+        const int64_t key( dist_int( rng ) );
         sset.erase( key );
-        tree.erase( key );
+        tree.remove( key );
     }
+
+    ASSERT_TRUE( tree.isEmpty() );
 }
-*/
+
 

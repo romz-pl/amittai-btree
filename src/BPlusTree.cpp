@@ -34,6 +34,17 @@ bool BPlusTree::isEmpty() const
     return !fRoot;
 }
 
+Record* BPlusTree::search( KeyType aKey )
+{
+    LeafNode* leafNode = findLeafNode( aKey );
+    if( !leafNode )
+    {
+        return nullptr;
+    }
+    return leafNode->lookup( aKey );
+}
+
+
 // INSERTION
 
 void BPlusTree::insert(KeyType aKey, ValueType aValue)
@@ -93,7 +104,6 @@ T* BPlusTree::split(T* aNode)
     aNode->moveHalfTo(newNode);
     return newNode;
 }
-
 
 // REMOVAL
 

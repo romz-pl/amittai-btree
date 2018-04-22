@@ -23,6 +23,7 @@
 #include <vector>
 #include "Definitions.hpp"
 #include "Printer.hpp"
+#include "Record.hpp"
 
 class InternalNode;
 class LeafNode;
@@ -45,6 +46,8 @@ public:
     
     /// Returns true if this B+ tree has no keys or values.
     bool isEmpty() const;
+
+    Record* search( KeyType aKey );
     
     /// Insert a key-value pair into this B+ tree.
     void insert(KeyType aKey, ValueType aValue);
