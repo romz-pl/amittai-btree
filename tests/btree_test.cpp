@@ -22,12 +22,13 @@ TEST( btree, search_empty )
     ASSERT_TRUE( !nb );
 }
 
+
 TEST( btree, one_item )
 {
     const std::uint32_t pool_size = 100;
     const Key k( 17 );
 
-    Tree tree( pool_size );
+    BPlusTree tree( order );
 
     ASSERT_NO_THROW( tree.insert( k ) );
     Node* na = tree.search( k );
@@ -37,32 +38,34 @@ TEST( btree, one_item )
     Node* nb = tree.search( k );
     ASSERT_TRUE( !nb );
 }
+*/
 
 TEST( btree, more_items )
 {
-    const std::uint32_t pool_size = 1000;
-    const int item_no = 200;
-    Tree tree( pool_size );
+    const int order = 10;
+    const int item_no = 2000;
+    BPlusTree tree( order );
 
     for( int i = 0; i < item_no; i++ )
     {
-        ASSERT_NO_THROW( tree.insert( Key( i ) ) );
+        ASSERT_NO_THROW( tree.insert( i, i ) );
     }
 
 
-    for( int i = 0; i < item_no; i++ )
-    {
-        Node* na = tree.search( Key( i ) );
-        ASSERT_TRUE( na );
-    }
+//    for( int i = 0; i < item_no; i++ )
+//    {
+//        Node* na = tree.search( Key( i ) );
+//        ASSERT_TRUE( na );
+//    }
 
     for( int i = 0; i < item_no; i++ )
     {
-        tree.erase( Key( i ) );
+        tree.remove( i );
     }
 
 }
 
+/*
 TEST( btree, reverse_erase )
 {
     const std::uint32_t pool_size = 1000;
