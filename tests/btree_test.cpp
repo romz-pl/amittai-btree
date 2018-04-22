@@ -68,8 +68,8 @@ TEST( btree, more_items )
 
 TEST( btree, reverse_erase )
 {
-    const int order = 10;
-    const int item_no = 200;
+    const int order = 5;
+    const int item_no = 20000;
     BPlusTree tree( order );
 
     for( int i = 0; i < item_no; i++ )
