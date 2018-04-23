@@ -22,9 +22,9 @@
 #include "InternalNode.hpp"
 #include "LeafNode.hpp"
 
-LeafNode::LeafNode(int aOrder) : fNext{nullptr}, Node(aOrder) {}
+LeafNode::LeafNode(int aOrder) : Node(aOrder), fNext{nullptr} {}
 
-LeafNode::LeafNode(int aOrder, Node* aParent) : fNext{nullptr}, Node(aOrder, aParent) {}
+LeafNode::LeafNode(int aOrder, Node* aParent) : Node(aOrder, aParent), fNext{nullptr} {}
 
 LeafNode::~LeafNode()
 {

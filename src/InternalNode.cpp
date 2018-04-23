@@ -180,7 +180,7 @@ Node* InternalNode::lookup(KeyType aKey) const
 
 int InternalNode::nodeIndex(Node *aNode) const
 {
-    for (size_t i = 0; i < size(); ++i) {
+    for (int i = 0; i < size(); ++i) {
         if (fMappings[i].second == aNode) {
             return static_cast<int>(i);
         }

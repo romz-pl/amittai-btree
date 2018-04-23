@@ -166,7 +166,7 @@ void BPlusTree::coalesce(N* aNeighborNode, N* aNode, InternalNode* aParent, int 
 }
 
 template <typename N>
-void BPlusTree::redistribute(N* aNeighborNode, N* aNode, InternalNode* aParent, int aIndex)
+void BPlusTree::redistribute(N* aNeighborNode, N* aNode, InternalNode* /*aParent*/, int aIndex)
 {
     if (aIndex == 0) {
         aNeighborNode->moveFirstToEndOf(aNode);
