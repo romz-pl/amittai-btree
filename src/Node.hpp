@@ -7,17 +7,19 @@
 // Key used where only the entry's pointer has meaning.
 const KeyType DUMMY_KEY{-1};
 
+class InternalNode;
+
 // Abstract class.
 class Node
 {
 public:
     explicit Node( int order );
-    explicit Node( int order, Node* parent );
+    Node( int order, InternalNode *parent );
     virtual ~Node() = default;
 
     int order() const;
-    Node* parent() const;
-    void set_parent( Node* parent);
+    InternalNode* parent() const;
+    void set_parent( InternalNode* parent);
     bool is_root() const;
 
     virtual bool is_leaf() const = 0;
@@ -29,7 +31,7 @@ public:
 private:
     const int m_order;
 
-    Node* m_parent;
+    InternalNode* m_parent;
 };
 
 #endif

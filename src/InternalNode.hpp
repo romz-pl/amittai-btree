@@ -10,7 +10,7 @@ class InternalNode : public Node
 {
 public:
     explicit InternalNode( int order );
-    InternalNode( int order, Node* parent );
+    InternalNode( int order, InternalNode* parent );
     ~InternalNode();
 
     using MappingType = std::pair< KeyType, Node* >;

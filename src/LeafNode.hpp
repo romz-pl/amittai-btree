@@ -11,7 +11,7 @@ class LeafNode : public Node
 {
 public:
     explicit LeafNode( int order );
-    LeafNode( int order, Node* parent) ;
+    LeafNode( int order, InternalNode* parent );
     ~LeafNode();
 
     using MappingType = std::pair< KeyType, Record* >;

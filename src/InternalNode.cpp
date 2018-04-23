@@ -9,7 +9,7 @@ InternalNode::InternalNode( int order )
 
 }
 
-InternalNode::InternalNode( int order, Node* parent )
+InternalNode::InternalNode( int order, InternalNode *parent )
     : Node( order, parent )
 {
 
@@ -114,7 +114,7 @@ void InternalNode::copy_half_from( std::vector< MappingType > &mappings )
 
 void InternalNode::move_all_to( InternalNode *recipient, int index_in_parent )
 {
-    m_mappings[0].first = static_cast<InternalNode*>(parent())->key_at(index_in_parent);
+    m_mappings[0].first = parent()->key_at(index_in_parent);
     recipient->copy_all_from(m_mappings);
     m_mappings.clear();
 }
@@ -131,7 +131,7 @@ void InternalNode::move_first_to_end_of( InternalNode *recipient )
 {
     recipient->copy_last_from(m_mappings.front());
     m_mappings.erase(m_mappings.begin());
-    static_cast<InternalNode*>(parent())->set_key_at(1, m_mappings.front().first);
+    parent()->set_key_at(1, m_mappings.front().first);
 }
 
 void InternalNode::copy_last_from( MappingType pair )
@@ -148,11 +148,11 @@ void InternalNode::move_last_to_front_of( InternalNode *recipient, int parent_in
 
 void InternalNode::copy_first_from( MappingType pair, int parent_index )
 {
-    m_mappings.front().first = static_cast<InternalNode*>(parent())->key_at(parent_index);
+    m_mappings.front().first = parent()->key_at(parent_index);
     m_mappings.insert(m_mappings.begin(), pair);
     m_mappings.front().first = DUMMY_KEY;
     m_mappings.front().second->set_parent(this);
-    static_cast<InternalNode*>(parent())->set_key_at(parent_index, m_mappings.front().first);
+    parent()->set_key_at(parent_index, m_mappings.front().first);
 }
 
 Node* InternalNode::lookup( KeyType key ) const

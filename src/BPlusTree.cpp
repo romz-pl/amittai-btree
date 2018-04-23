@@ -123,7 +123,7 @@ void BPlusTree::insert_into_leaf( KeyType key, ValueType value )
 //
 void BPlusTree::insert_into_parent(  Node *old_node, KeyType key, Node *new_node )
 {
-    InternalNode* parent = static_cast< InternalNode* >( old_node->parent() );
+    InternalNode* parent = old_node->parent();
     if (parent == nullptr)
     {
         m_root = new InternalNode( m_order );
@@ -216,7 +216,7 @@ void BPlusTree::coalesce_or_redistribute( LeafNode* node )
         adjust_root();
         return;
     }
-    auto parent = static_cast< InternalNode* >( node->parent() );
+    InternalNode* parent = node->parent();
     const int indexOfNodeInParent = parent->node_index( node );
     const int neighborIndex = ( indexOfNodeInParent == 0 ) ? 1 : indexOfNodeInParent - 1;
     LeafNode* neighborNode = static_cast< LeafNode* >( parent->neighbor( neighborIndex ) );
@@ -242,7 +242,7 @@ void BPlusTree::coalesce_or_redistribute( InternalNode* node )
         return;
     }
 
-    auto parent = static_cast< InternalNode* >( node->parent() );
+    InternalNode* parent = node->parent();
     const int indexOfNodeInParent = parent->node_index( node );
     const int neighborIndex = (indexOfNodeInParent == 0) ? 1 : indexOfNodeInParent - 1;
     InternalNode* neighborNode = static_cast< InternalNode* >( parent->neighbor( neighborIndex ) );
