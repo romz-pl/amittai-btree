@@ -91,7 +91,7 @@ void BPlusTree::insert( KeyType key, ValueType value )
 //
 void BPlusTree::start_new_tree( KeyType key, ValueType value )
 {
-    LeafNode* newLeafNode = new LeafNode( m_order );
+    LeafNode* newLeafNode = new LeafNode( m_order, nullptr );
     newLeafNode->create_and_insert_record( key, value );
     m_root = newLeafNode;
 }
@@ -107,7 +107,7 @@ void BPlusTree::insert_into_leaf( KeyType key, ValueType value )
         throw LeafNotFoundException( key );
     }
 
-    const int newSize = leafNode->create_and_insert_record( key, value );
+    const std::uint32_t newSize = leafNode->create_and_insert_record( key, value );
     if( newSize > leafNode->max_size() )
     {
         LeafNode* newLeaf = split( leafNode );
@@ -126,7 +126,7 @@ void BPlusTree::insert_into_parent(  Node *old_node, KeyType key, Node *new_node
     InternalNode* parent = old_node->parent();
     if (parent == nullptr)
     {
-        m_root = new InternalNode( m_order );
+        m_root = new InternalNode( m_order, nullptr );
         parent = static_cast< InternalNode* >( m_root );
         old_node->set_parent( parent );
         new_node->set_parent( parent );
@@ -134,7 +134,7 @@ void BPlusTree::insert_into_parent(  Node *old_node, KeyType key, Node *new_node
     }
     else
     {
-        const int newSize = parent->insert_node_after( old_node, key, new_node );
+        const std::uint32_t newSize = parent->insert_node_after( old_node, key, new_node );
         if( newSize > parent->max_size() )
         {
             InternalNode* newNode = split( parent );
@@ -199,7 +199,7 @@ void BPlusTree::remove_from_leaf( KeyType key )
         return;
     }
 
-    const int newSize = leafNode->remove_and_delete_record( key );
+    const std::uint32_t newSize = leafNode->remove_and_delete_record( key );
     if( newSize < leafNode->min_size() )
     {
         coalesce_or_redistribute( leafNode );

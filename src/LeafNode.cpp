@@ -1,16 +1,9 @@
-#include <sstream>
 #include "Exceptions.hpp"
 #include "InternalNode.hpp"
 #include "LeafNode.hpp"
 
-LeafNode::LeafNode( int order )
-    : Node( order )
-    , m_next{ nullptr }
-{
 
-}
-
-LeafNode::LeafNode( int order, InternalNode* parent )
+LeafNode::LeafNode( std::uint32_t order, InternalNode* parent )
     : Node( order, parent )
     , m_next{ nullptr }
 {
@@ -30,41 +23,21 @@ bool LeafNode::is_leaf() const
     return true;
 }
 
-int LeafNode::size() const
+std::uint32_t LeafNode::size() const
 {
     return static_cast<int>(m_mappings.size());
 }
 
-int LeafNode::min_size() const
+std::uint32_t LeafNode::min_size() const
 {
-    return order()/2;
+    return order() / 2;
 }
 
-int LeafNode::max_size() const
+std::uint32_t LeafNode::max_size() const
 {
     return order() - 1;
 }
 
-std::string LeafNode::to_string(bool verbose) const
-{
-    std::ostringstream keyToTextConverter;
-    if (verbose) {
-        keyToTextConverter << "[" << std::hex << this << std::dec << "]<" << m_mappings.size() << "> ";
-    }
-    bool first = true;
-    for (auto mapping : m_mappings) {
-        if (first) {
-            first = false;
-        } else {
-            keyToTextConverter << " ";
-        }
-        keyToTextConverter << mapping.first;
-    }
-    if (verbose) {
-        keyToTextConverter << "[" << std::hex << m_next << ">";
-    }
-    return keyToTextConverter.str();
-}
 
 LeafNode* LeafNode::next() const
 {
@@ -77,14 +50,14 @@ void LeafNode::set_next( LeafNode* next )
 }
 
 
-int LeafNode::create_and_insert_record( KeyType key, ValueType value )
+std::uint32_t LeafNode::create_and_insert_record( KeyType key, ValueType value )
 {
     Record* existingRecord = lookup(key);
     if (!existingRecord) {
         Record* newRecord = new Record(value);
         insert(key, newRecord);
     }
-    return static_cast<int>(m_mappings.size());
+    return static_cast< std::uint32_t >( m_mappings.size() );
 }
 
 void LeafNode::insert( KeyType key, Record* record )
@@ -107,41 +80,9 @@ Record* LeafNode::lookup( KeyType key ) const
     return nullptr;
 }
 
-void LeafNode::copy_range_starting_from( KeyType key, std::vector< EntryType >& vector )
-{
-    bool found = false;
-    for (auto mapping : m_mappings) {
-        if (mapping.first == key) {
-            found = true;
-        }
-        if (found) {
-            vector.push_back(std::make_tuple(mapping.first, mapping.second->value(), this));
-        }
-    }
-}
-
-void LeafNode::copy_range_until( KeyType key, std::vector< EntryType >& vector )
-{
-    bool found = false;
-    for (auto mapping : m_mappings) {
-        if (!found) {
-            vector.push_back(std::make_tuple(mapping.first, mapping.second->value(), this));
-        }
-        if (mapping.first == key) {
-            found = true;
-        }
-    }
-}
-
-void LeafNode::copy_range( std::vector< EntryType >& vector )
-{
-    for (auto mapping : m_mappings) {
-        vector.push_back(std::make_tuple(mapping.first, mapping.second->value(), this));
-    }
-}
 
 
-int LeafNode::remove_and_delete_record (KeyType key )
+std::uint32_t LeafNode::remove_and_delete_record (KeyType key )
 {
     auto removalPoint = m_mappings.begin();
     auto end = m_mappings.end();
@@ -154,7 +95,7 @@ int LeafNode::remove_and_delete_record (KeyType key )
     auto record = *removalPoint;
     m_mappings.erase(removalPoint);
     delete record.second;
-    return static_cast<int>(m_mappings.size());
+    return static_cast< std::uint32_t >( m_mappings.size() );
 }
 
 KeyType LeafNode::first_key() const

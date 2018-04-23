@@ -3,17 +3,7 @@
 //
 //
 //
-Node::Node( int order )
-    : m_order{ order }
-    , m_parent{ nullptr }
-{
-
-}
-
-//
-//
-//
-Node::Node( int order, InternalNode* parent )
+Node::Node( std::uint32_t order, InternalNode* parent )
     : m_order{ order }
     , m_parent{ parent }
 {
@@ -23,7 +13,7 @@ Node::Node( int order, InternalNode* parent )
 //
 //
 //
-int Node::order() const
+std::uint32_t Node::order() const
 {
     return m_order;
 }

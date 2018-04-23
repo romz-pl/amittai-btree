@@ -9,26 +9,26 @@
 
 class LeafNode : public Node
 {
+    friend class Io;
+    friend class Printer;
 public:
-    explicit LeafNode( int order );
-    LeafNode( int order, InternalNode* parent );
+    LeafNode( std::uint32_t order, InternalNode* parent );
     ~LeafNode();
 
     using MappingType = std::pair< KeyType, Record* >;
     using EntryType = std::tuple< KeyType, ValueType, LeafNode* >;
 
     bool is_leaf() const override;
-    int size() const override;
-    int min_size() const override;
-    int max_size() const override;
-    std::string to_string( bool verbose = false ) const override;
+    std::uint32_t size() const override;
+    std::uint32_t min_size() const override;
+    std::uint32_t max_size() const override;
 
     LeafNode* next() const;
     void set_next( LeafNode* next );
-    int create_and_insert_record( KeyType key, ValueType value );
+    std::uint32_t create_and_insert_record( KeyType key, ValueType value );
     void insert( KeyType key, Record* record );
     Record* lookup( KeyType key ) const;
-    int remove_and_delete_record( KeyType key );
+    std::uint32_t remove_and_delete_record( KeyType key );
     KeyType first_key() const;
 
 
@@ -38,9 +38,7 @@ public:
     void move_last_to_front_of( LeafNode* recipient, int parent_index );
 
 
-    void copy_range_starting_from( KeyType key, std::vector< EntryType >& vector );
-    void copy_range_until( KeyType key, std::vector< EntryType >& vector );
-    void copy_range( std::vector<EntryType>& vector );
+
 
 private:
     void copy_half_from( std::vector< MappingType >& mappings );
