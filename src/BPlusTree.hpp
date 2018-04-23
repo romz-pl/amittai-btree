@@ -52,7 +52,9 @@ private:
     void insert_into_parent( Node* old_node, KeyType key, Node* new_node );
     void remove_from_leaf( KeyType key );
 
-    template< typename T > T* split( T* node );
+    LeafNode* split( LeafNode* node );
+    InternalNode* split( InternalNode* node );
+
     template< typename N > void coalesce_or_redistribute( N* node );
     template< typename N > void coalesce( N* neighbor_node, N* node, InternalNode* parent, int index );
     template< typename N > void redistribute( N* neighbor_node, N* node, InternalNode* parent, int index );

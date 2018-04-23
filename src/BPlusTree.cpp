@@ -94,10 +94,17 @@ void BPlusTree::insert_into_parent(  Node *old_node, KeyType key, Node *new_node
     }
 }
 
-template< typename T >
-T* BPlusTree::split( T* node )
+LeafNode* BPlusTree::split( LeafNode* node )
 {
-    T* newNode = new T(m_order, node->parent());
+    LeafNode* newNode = new LeafNode(m_order, node->parent());
+    node->move_half_to(newNode);
+    return newNode;
+}
+
+
+InternalNode* BPlusTree::split( InternalNode* node )
+{
+    InternalNode* newNode = new InternalNode(m_order, node->parent());
     node->move_half_to(newNode);
     return newNode;
 }
