@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "BPlusTree.hpp"
 #include <random>
+#include <map>
 
 
 
@@ -13,15 +14,15 @@ TEST( btree, constuction )
     }
 }
 
-/*
+
 TEST( btree, search_empty )
 {
-    const std::uint32_t pool_size = 100;
-    Tree tree( pool_size );
-    Node* nb = tree.search( Key( 1 ) );
-    ASSERT_TRUE( !nb );
+    const int order = 4;
+    BPlusTree tree( order );
+    Record* rec = tree.search( 1 );
+    ASSERT_TRUE( !rec );
 }
-*/
+
 
 TEST( btree, one_item )
 {
@@ -31,7 +32,9 @@ TEST( btree, one_item )
     BPlusTree tree( order );
 
     ASSERT_NO_THROW( tree.insert( k, k ) );
-    ASSERT_TRUE( tree.search( k ) != nullptr );
+    Record* rec = tree.search( k );
+    ASSERT_TRUE( rec != nullptr );
+    ASSERT_TRUE( rec->value() == k );
 
     tree.remove( k );
 
@@ -86,7 +89,9 @@ TEST( btree, reverse_erase )
 
     for( int i = 0; i < item_no; i++ )
     {
-        ASSERT_TRUE( tree.search( i ) != nullptr );
+        Record* rec = tree.search( i );
+        ASSERT_TRUE( rec );
+        ASSERT_TRUE( rec->value() == i );
     }
 
     for( int i = item_no - 1; i >= 0 ; i-- )
@@ -144,7 +149,7 @@ TEST( btree, insert_search_delete )
 
 TEST( btree, insert_random )
 {
-    std::set< int64_t > sset;
+    std::map< KeyType, ValueType > smap;
     const int order = 5;
     BPlusTree tree( order );
 
@@ -165,20 +170,22 @@ TEST( btree, insert_random )
 
         if( x > threshold )
         {
-            sset.insert( key );
+            smap.insert( std::make_pair( key, i ) );
             ASSERT_NO_THROW( tree.insert( key, i ) );
         }
         else
         {
-            sset.erase( key );
+            smap.erase( key );
             tree.remove( key );
         }
 
         // std::cout<< sset.size() << "\n" << std::flush;
 
-        for( auto v : sset )
+        for( auto v : smap )
         {
-            ASSERT_TRUE( tree.search( v ) != nullptr );
+            Record* rec = tree.search( v.first );
+            ASSERT_TRUE( rec );
+            ASSERT_TRUE( rec->value() == v.second );
         }
 
     }
@@ -187,7 +194,7 @@ TEST( btree, insert_random )
 
 TEST( btree, erase_random )
 {
-    std::set< int64_t > sset;
+    std::map< KeyType, ValueType > smap;
     const int order = 5;
     BPlusTree tree( order );
 
@@ -202,19 +209,21 @@ TEST( btree, erase_random )
     for( int i = 0; i < iter_no; i++ )
     {
         const int64_t key( dist_int( rng ) );
-        sset.insert( key );
+        smap.insert( std::make_pair( key, i ) );
         ASSERT_NO_THROW( tree.insert( key, i ) );
     }
 
-    for( auto v : sset )
+    for( auto v : smap )
     {
-        ASSERT_TRUE( tree.search( v ) != nullptr );
+        Record* rec = tree.search( v.first );
+        ASSERT_TRUE( rec );
+        ASSERT_TRUE( rec->value() == v.second );
     }
 
-    while( !sset.empty() )
+    while( !smap.empty() )
     {
-        const int64_t key( dist_int( rng ) );
-        sset.erase( key );
+        const KeyType key( dist_int( rng ) );
+        smap.erase( key );
         tree.remove( key );
     }
 
