@@ -231,14 +231,14 @@ void BPlusTree::readInputFromFile(std::string aFileName)
 
 void BPlusTree::print(bool aVerbose)
 {
-    fPrinter.setVerbose(aVerbose);
-    fPrinter.printTree(fRoot);
+    fPrinter.set_verbose(aVerbose);
+    fPrinter.print_tree(fRoot);
 }
 
 void BPlusTree::printLeaves(bool aVerbose)
 {
-    fPrinter.setVerbose(aVerbose);
-    fPrinter.printLeaves(fRoot);
+    fPrinter.set_verbose(aVerbose);
+    fPrinter.print_leaves(fRoot);
 }
 
 void BPlusTree::destroyTree()

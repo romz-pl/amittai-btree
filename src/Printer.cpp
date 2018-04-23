@@ -1,22 +1,3 @@
-//
-//  Printer.cpp
-//  BPlusTree.2a
-//
-//  Created by Amittai Aviram on 6/13/16.
-//  Copyright © 2016 Amittai Aviram. All rights reserved.
-//
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
-//
-//  http://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
-
 #include <iostream>
 #include "InternalNode.hpp"
 #include "LeafNode.hpp"
@@ -24,77 +5,81 @@
 
 #include "Printer.hpp"
 
-Printer::Printer() : fVerbose(false) {}
+Printer::Printer()
+    : m_verbose( false )
+{
+
+}
 
 bool Printer::verbose() const
 {
-    return fVerbose;
+    return m_verbose;
 }
 
-void Printer::setVerbose(bool aVerbose)
+void Printer::set_verbose( bool verbose )
 {
-    fVerbose = aVerbose;
+    m_verbose = verbose;
 }
 
-void Printer::printTree(Node *aRoot) const
+void Printer::print_tree( Node *root ) const
 {
-    if (!aRoot) {
-        printEmptyTree();
+    if (!root) {
+        print_empty_tree();
     } else {
-        printNonEmptyTree(aRoot);
+        print_non_empty_tree(root);
     }
 }
 
-void Printer::printEmptyTree() const
+void Printer::print_empty_tree() const
 {
     std::cout << "Empty tree." << std::endl;
 }
 
-void Printer::printNonEmptyTree(Node *aRoot) const
+void Printer::print_non_empty_tree( Node *root ) const
 {
     std::queue<Node*> queue0;
     std::queue<Node*> queue1;
     auto currentRank = &queue0;
     auto nextRank = &queue1;
-    currentRank->push(aRoot);
+    currentRank->push(root);
     while (!currentRank->empty()) {
-        printCurrentRank(currentRank, nextRank);
+        print_current_rank(currentRank, nextRank);
         auto tmp = currentRank;
         currentRank = nextRank;
         nextRank = tmp;
     }
 }
 
-void Printer::printCurrentRank(std::queue<Node*>* aCurrentRank, std::queue<Node*>* aNextRank) const
+void Printer::print_current_rank( std::queue< Node* >* current_rank, std::queue< Node* >* next_rank) const
 {
     std::cout << "|";
-    while(!aCurrentRank->empty()) {
-        Node* currentNode = aCurrentRank->front();
+    while(!current_rank->empty()) {
+        Node* currentNode = current_rank->front();
         std::cout << " " << currentNode->to_string(verbose());
         std::cout << " |";
         if (!currentNode->is_leaf()) {
             auto internalNode = static_cast<InternalNode*>(currentNode);
-            internalNode->queue_up_children(aNextRank);
+            internalNode->queue_up_children(next_rank);
         }
-        aCurrentRank->pop();
+        current_rank->pop();
     }
     std::cout << std::endl;
 }
 
-void Printer::printLeaves(Node *aRoot)
+void Printer::print_leaves( Node *root )
 {
-    if (!aRoot) {
-        printEmptyTree();
+    if (!root) {
+        print_empty_tree();
         return;
     }
-    auto node = aRoot;
+    auto node = root;
     while (!node->is_leaf()) {
         node = static_cast<InternalNode*>(node)->first_child();
     }
     auto leafNode = static_cast<LeafNode*>(node);
     while (leafNode) {
         std::cout << "| ";
-        std::cout << leafNode->to_string(fVerbose);
+        std::cout << leafNode->to_string(m_verbose);
         leafNode = leafNode->next();
     }
     std::cout << " |" << std::endl;
