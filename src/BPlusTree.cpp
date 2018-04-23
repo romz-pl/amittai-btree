@@ -1,15 +1,15 @@
 #include <stdexcept>
-#include <string>
+#include <algorithm>
 #include "BPlusTree.hpp"
 #include "InternalNode.hpp"
 #include "LeafNode.hpp"
 #include "Node.hpp"
 
 //
-//
+// Minimum order is necessarily 3.
 //
 BPlusTree::BPlusTree( std::size_t order )
-    : m_order{ order }
+    : m_order{ std::max( order, static_cast< std::size_t >( 3 ) ) }
     , m_root{ nullptr }
 {
 

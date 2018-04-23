@@ -8,7 +8,7 @@
 TEST( btree, constuction )
 {
 
-    for( std::size_t order = MIN_ORDER; order <= MAX_ORDER; order++ )
+    for( std::size_t order = 3; order <= 1000; order++ )
     {
         ASSERT_NO_THROW( BPlusTree{ order } );
     }

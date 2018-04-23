@@ -1,7 +1,6 @@
 #include <stdexcept>
-#include "InternalNode.hpp"
 #include "LeafNode.hpp"
-
+#include "InternalNode.hpp"
 
 LeafNode::LeafNode( std::size_t order, InternalNode* parent )
     : Node( order, parent )

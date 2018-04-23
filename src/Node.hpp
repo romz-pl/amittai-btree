@@ -1,14 +1,9 @@
 #ifndef ROMZ_AMITTAI_BTREE_NODE_H
 #define ROMZ_AMITTAI_BTREE_NODE_H
 
-
-#include <cstdint>
 #include "Definitions.hpp"
 
-
-
 class InternalNode;
-
 
 class Node
 {
