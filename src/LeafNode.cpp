@@ -1,4 +1,4 @@
-#include "Exceptions.hpp"
+#include <stdexcept>
 #include "InternalNode.hpp"
 #include "LeafNode.hpp"
 
@@ -90,7 +90,7 @@ std::uint32_t LeafNode::remove_and_delete_record (KeyType key )
         ++removalPoint;
     }
     if (removalPoint == end) {
-        throw RecordNotFoundException(key);
+        throw std::runtime_error( "Record Not Found" );
     }
     auto record = *removalPoint;
     m_mappings.erase(removalPoint);

@@ -1,7 +1,7 @@
 #ifndef ROMZ_AMITTAI_BTREE_IO_H
 #define ROMZ_AMITTAI_BTREE_IO_H
 
-
+#include <string>
 #include "Printer.hpp"
 #include "BPlusTree.hpp"
 #include "LeafNode.hpp"

@@ -1,7 +1,6 @@
-#include <iostream>
+#include <stdexcept>
 #include <string>
 #include "BPlusTree.hpp"
-#include "Exceptions.hpp"
 #include "InternalNode.hpp"
 #include "LeafNode.hpp"
 #include "Node.hpp"
@@ -104,7 +103,7 @@ void BPlusTree::insert_into_leaf( KeyType key, ValueType value )
     LeafNode* leafNode = find_leaf_node( key );
     if( !leafNode )
     {
-        throw LeafNotFoundException( key );
+        throw std::runtime_error( "Leaf Not Found" );
     }
 
     const std::uint32_t newSize = leafNode->create_and_insert_record( key, value );
