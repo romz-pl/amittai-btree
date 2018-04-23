@@ -2,7 +2,6 @@
 #define ROMZ_AMITTAI_BTREE_BPLUSTREE_H
 
 #include <tuple>
-#include <vector>
 #include "Definitions.hpp"
 #include "Record.hpp"
 
@@ -20,7 +19,7 @@ public:
     /// Sole constructor.  Accepts an optional order for the B+ Tree.
     /// The default order will provide a reasonable demonstration of the
     /// data structure and its operations.
-    explicit BPlusTree( std::size_t order = DEFAULT_ORDER );
+    explicit BPlusTree( std::size_t order );
     ~BPlusTree();
     
     /// The type used in the API for inserting a new key-value pair
