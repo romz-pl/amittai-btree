@@ -9,6 +9,8 @@
 
 class LeafNode : public Node
 {
+    friend class Io;
+    friend class Printer;
 public:
     LeafNode( std::uint32_t order, InternalNode* parent );
     ~LeafNode();
@@ -20,7 +22,6 @@ public:
     std::uint32_t size() const override;
     std::uint32_t min_size() const override;
     std::uint32_t max_size() const override;
-    std::string to_string( bool verbose = false ) const override;
 
     LeafNode* next() const;
     void set_next( LeafNode* next );
@@ -37,9 +38,7 @@ public:
     void move_last_to_front_of( LeafNode* recipient, int parent_index );
 
 
-    void copy_range_starting_from( KeyType key, std::vector< EntryType >& vector );
-    void copy_range_until( KeyType key, std::vector< EntryType >& vector );
-    void copy_range( std::vector<EntryType>& vector );
+
 
 private:
     void copy_half_from( std::vector< MappingType >& mappings );

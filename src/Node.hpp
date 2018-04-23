@@ -1,7 +1,7 @@
 #ifndef ROMZ_AMITTAI_BTREE_NODE_H
 #define ROMZ_AMITTAI_BTREE_NODE_H
 
-#include <string>
+
 #include <cstdint>
 #include "Definitions.hpp"
 
@@ -25,7 +25,6 @@ public:
     virtual std::uint32_t size() const = 0;
     virtual std::uint32_t min_size() const = 0;
     virtual std::uint32_t max_size() const = 0;
-    virtual std::string to_string( bool verbose = false ) const = 0;
 
 private:
     const std::uint32_t m_order;

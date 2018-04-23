@@ -5,6 +5,7 @@ add_library( ${LIB_NAME} STATIC
     BPlusTree.cpp 
     Exceptions.cpp 
     InternalNode.cpp 
+    io.cpp
     LeafNode.cpp 
     Node.cpp 
     Printer.cpp 

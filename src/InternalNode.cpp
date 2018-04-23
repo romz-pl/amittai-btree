@@ -182,36 +182,3 @@ Node* InternalNode::neighbor( int index ) const
     return m_mappings[index].second;
 }
 
-std::string InternalNode::to_string( bool verbose ) const
-{
-    if (m_mappings.empty()) {
-        return "";
-    }
-    std::ostringstream keyToTextConverter;
-    if (verbose) {
-        keyToTextConverter << "[" << std::hex << this << std::dec << "]<" << m_mappings.size() << "> ";
-    }
-    auto entry = verbose ? m_mappings.begin() : m_mappings.begin() + 1;
-    auto end = m_mappings.end();
-    bool first = true;
-    while (entry != end) {
-        if (first) {
-            first = false;
-        } else {
-            keyToTextConverter << " ";
-        }
-        keyToTextConverter << std::dec << entry->first;
-        if (verbose) {
-            keyToTextConverter << "(" << std::hex << entry->second << std::dec << ")";
-        }
-        ++entry;
-    }
-    return keyToTextConverter.str();
-}
-
-void InternalNode::queue_up_children( std::queue< Node* >* queue )
-{
-    for (auto mapping : m_mappings) {
-        queue->push(mapping.second);
-    }
-}

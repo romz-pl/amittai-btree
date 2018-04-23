@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 #include "InternalNode.hpp"
 #include "LeafNode.hpp"
 #include "Node.hpp"
@@ -55,11 +56,11 @@ void Printer::print_current_rank( std::queue< Node* >* current_rank, std::queue<
     std::cout << "|";
     while(!current_rank->empty()) {
         Node* currentNode = current_rank->front();
-        std::cout << " " << currentNode->to_string(verbose());
+        std::cout << " " << to_string( currentNode, verbose());
         std::cout << " |";
         if (!currentNode->is_leaf()) {
             auto internalNode = static_cast<InternalNode*>(currentNode);
-            internalNode->queue_up_children(next_rank);
+            internal_node_queue_up_children( internalNode, next_rank);
         }
         current_rank->pop();
     }
@@ -79,8 +80,76 @@ void Printer::print_leaves( Node *root )
     auto leafNode = static_cast<LeafNode*>(node);
     while (leafNode) {
         std::cout << "| ";
-        std::cout << leafNode->to_string(m_verbose);
+        std::cout << to_string( leafNode, m_verbose);
         leafNode = leafNode->next();
     }
     std::cout << " |" << std::endl;
 }
+
+void Printer::internal_node_queue_up_children( InternalNode* internal, std::queue< Node* >* queue ) const
+{
+    for (auto mapping : internal->m_mappings)
+    {
+        queue->push(mapping.second);
+    }
+}
+
+std::string Printer::to_string( const Node* node, bool verbose )
+{
+    if( node->is_leaf() )
+    {
+        return to_string( static_cast< const LeafNode* >( node ), verbose );
+    }
+
+    return to_string( static_cast< const InternalNode* >( node ), verbose );
+}
+
+std::string Printer::to_string( const LeafNode* leaf, bool verbose )
+{
+    std::ostringstream keyToTextConverter;
+    if (verbose) {
+        keyToTextConverter << "[" << std::hex << leaf << std::dec << "]<" << leaf->m_mappings.size() << "> ";
+    }
+    bool first = true;
+    for (auto mapping : leaf->m_mappings) {
+        if (first) {
+            first = false;
+        } else {
+            keyToTextConverter << " ";
+        }
+        keyToTextConverter << mapping.first;
+    }
+    if (verbose) {
+        keyToTextConverter << "[" << std::hex << leaf->m_next << ">";
+    }
+    return keyToTextConverter.str();
+}
+
+std::string Printer::to_string( const InternalNode* internal, bool verbose )
+{
+    if (internal->m_mappings.empty()) {
+        return "";
+    }
+    std::ostringstream keyToTextConverter;
+    if (verbose) {
+        keyToTextConverter << "[" << std::hex << internal << std::dec << "]<" << internal->m_mappings.size() << "> ";
+    }
+    auto entry = verbose ? internal->m_mappings.begin() : internal->m_mappings.begin() + 1;
+    auto end = internal->m_mappings.end();
+    bool first = true;
+    while (entry != end) {
+        if (first) {
+            first = false;
+        } else {
+            keyToTextConverter << " ";
+        }
+        keyToTextConverter << std::dec << entry->first;
+        if (verbose) {
+            keyToTextConverter << "(" << std::hex << entry->second << std::dec << ")";
+        }
+        ++entry;
+    }
+    return keyToTextConverter.str();
+}
+
+

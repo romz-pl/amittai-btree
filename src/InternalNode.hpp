@@ -1,13 +1,16 @@
 #ifndef ROMZ_AMITTAI_BTREE_INTERNALNODE_H
 #define ROMZ_AMITTAI_BTREE_INTERNALNODE_H
 
-#include <queue>
+
 #include <vector>
 #include "Definitions.hpp"
 #include "Node.hpp"
 
 class InternalNode : public Node
 {
+    friend class Io;
+    friend class Printer;
+
 public:
     InternalNode( std::uint32_t order, InternalNode* parent );
     ~InternalNode();
@@ -18,7 +21,7 @@ public:
     std::uint32_t size() const override;
     std::uint32_t min_size() const override;
     std::uint32_t max_size() const override;
-    std::string to_string( bool verbose = false ) const override;
+
 
     KeyType key_at( int index ) const;
     void set_key_at( int index, KeyType key );
@@ -39,7 +42,7 @@ public:
     Node* lookup( KeyType key ) const;
     int node_index( Node* node ) const;
     Node* neighbor( int index ) const;
-    void queue_up_children( std::queue< Node* >* queue );
+
 
 private:
     void copy_half_from( std::vector< MappingType >& mappings );
