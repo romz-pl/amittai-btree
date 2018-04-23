@@ -201,8 +201,17 @@ void BPlusTree::coalesce( InternalNode* neighbor_node, InternalNode* node, Inter
     delete node;
 }
 
-template< typename N >
-void BPlusTree::redistribute( N* neighbor_node, N* node, InternalNode* /*aParent*/, int index )
+
+void BPlusTree::redistribute( LeafNode* neighbor_node, LeafNode* node, InternalNode* /*aParent*/, int index )
+{
+    if (index == 0) {
+        neighbor_node->move_first_to_end_of(node);
+    } else {
+        neighbor_node->move_last_to_front_of(node, index);
+    }
+}
+
+void BPlusTree::redistribute( InternalNode* neighbor_node, InternalNode* node, InternalNode* /*aParent*/, int index )
 {
     if (index == 0) {
         neighbor_node->move_first_to_end_of(node);
