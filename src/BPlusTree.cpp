@@ -172,8 +172,22 @@ void BPlusTree::coalesce_or_redistribute( InternalNode* node )
     }
 }
 
-template< typename N >
-void BPlusTree::coalesce( N* neighbor_node, N* node, InternalNode* parent, int index )
+void BPlusTree::coalesce( LeafNode* neighbor_node, LeafNode* node, InternalNode* parent, int index )
+{
+    if (index == 0) {
+        std::swap(node, neighbor_node);
+        index = 1;
+    }
+    node->move_all_to(neighbor_node, index);
+    parent->remove(index);
+    if (parent->size() < parent->min_size()) {
+        coalesce_or_redistribute(parent);
+    }
+    delete node;
+}
+
+
+void BPlusTree::coalesce( InternalNode* neighbor_node, InternalNode* node, InternalNode* parent, int index )
 {
     if (index == 0) {
         std::swap(node, neighbor_node);

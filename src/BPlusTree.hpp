@@ -58,7 +58,9 @@ private:
     void coalesce_or_redistribute( LeafNode* node );
     void coalesce_or_redistribute( InternalNode* node );
 
-    template< typename N > void coalesce( N* neighbor_node, N* node, InternalNode* parent, int index );
+    void coalesce( LeafNode* neighbor_node, LeafNode* node, InternalNode* parent, int index );
+    void coalesce( InternalNode* neighbor_node, InternalNode* node, InternalNode* parent, int index );
+
     template< typename N > void redistribute( N* neighbor_node, N* node, InternalNode* parent, int index );
 
     void adjust_root();
