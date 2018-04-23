@@ -3,7 +3,7 @@
 #include "LeafNode.hpp"
 
 
-LeafNode::LeafNode( std::uint32_t order, InternalNode* parent )
+LeafNode::LeafNode( std::size_t order, InternalNode* parent )
     : Node( order, parent )
     , m_next{ nullptr }
 {
@@ -23,17 +23,17 @@ bool LeafNode::is_leaf() const
     return true;
 }
 
-std::uint32_t LeafNode::size() const
+std::size_t LeafNode::size() const
 {
-    return static_cast<int>(m_mappings.size());
+    return static_cast<std::size_t>(m_mappings.size());
 }
 
-std::uint32_t LeafNode::min_size() const
+std::size_t LeafNode::min_size() const
 {
     return order() / 2;
 }
 
-std::uint32_t LeafNode::max_size() const
+std::size_t LeafNode::max_size() const
 {
     return order() - 1;
 }
@@ -50,14 +50,14 @@ void LeafNode::set_next( LeafNode* next )
 }
 
 
-std::uint32_t LeafNode::create_and_insert_record( KeyType key, ValueType value )
+std::size_t LeafNode::create_and_insert_record( KeyType key, ValueType value )
 {
     Record* existingRecord = lookup(key);
     if (!existingRecord) {
         Record* newRecord = new Record(value);
         insert(key, newRecord);
     }
-    return static_cast< std::uint32_t >( m_mappings.size() );
+    return static_cast< std::size_t >( m_mappings.size() );
 }
 
 void LeafNode::insert( KeyType key, Record* record )
@@ -82,7 +82,7 @@ Record* LeafNode::lookup( KeyType key ) const
 
 
 
-std::uint32_t LeafNode::remove_and_delete_record (KeyType key )
+std::size_t LeafNode::remove_and_delete_record (KeyType key )
 {
     auto removalPoint = m_mappings.begin();
     auto end = m_mappings.end();
@@ -95,7 +95,7 @@ std::uint32_t LeafNode::remove_and_delete_record (KeyType key )
     auto record = *removalPoint;
     m_mappings.erase(removalPoint);
     delete record.second;
-    return static_cast< std::uint32_t >( m_mappings.size() );
+    return static_cast< std::size_t >( m_mappings.size() );
 }
 
 KeyType LeafNode::first_key() const
@@ -119,7 +119,7 @@ void LeafNode::copy_half_from( std::vector< std::pair< KeyType, Record* > > &aMa
     }
 }
 
-void LeafNode::move_all_to( LeafNode *recipient, int )
+void LeafNode::move_all_to( LeafNode *recipient, std::size_t )
 {
     recipient->copy_all_from(m_mappings);
     m_mappings.clear();
@@ -145,13 +145,13 @@ void LeafNode::copy_last_from( MappingType pair )
     m_mappings.push_back(pair);
 }
 
-void LeafNode::move_last_to_front_of( LeafNode *recipient, int parent_index )
+void LeafNode::move_last_to_front_of( LeafNode *recipient, std::size_t parent_index )
 {
     recipient->copy_first_from(m_mappings.back(), parent_index);
     m_mappings.pop_back();
 }
 
-void LeafNode::copy_first_from( MappingType aPair, int parent_index )
+void LeafNode::copy_first_from( MappingType aPair, std::size_t parent_index )
 {
     m_mappings.insert(m_mappings.begin(), aPair);
     parent()->set_key_at(parent_index, m_mappings.front().first);

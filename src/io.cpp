@@ -47,7 +47,7 @@ LeafNode* Io::find_leaf_node( KeyType key, bool printing, bool verbose )
 
 void Io::read_input_from_file( std::string file_name )
 {
-    int key;
+    std::size_t key;
     std::ifstream input(file_name);
     while (input) {
         input >> key;

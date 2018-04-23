@@ -20,7 +20,7 @@ public:
     /// Sole constructor.  Accepts an optional order for the B+ Tree.
     /// The default order will provide a reasonable demonstration of the
     /// data structure and its operations.
-    explicit BPlusTree( int order = DEFAULT_ORDER );
+    explicit BPlusTree( std::size_t order = DEFAULT_ORDER );
     ~BPlusTree();
     
     /// The type used in the API for inserting a new key-value pair
@@ -58,11 +58,11 @@ private:
     void coalesce_or_redistribute( LeafNode* node );
     void coalesce_or_redistribute( InternalNode* node );
 
-    void coalesce( LeafNode* neighbor_node, LeafNode* node, InternalNode* parent, int index );
-    void coalesce( InternalNode* neighbor_node, InternalNode* node, InternalNode* parent, int index );
+    void coalesce( LeafNode* neighbor_node, LeafNode* node, InternalNode* parent, std::size_t index );
+    void coalesce( InternalNode* neighbor_node, InternalNode* node, InternalNode* parent, std::size_t index );
 
-    void redistribute( LeafNode* neighbor_node, LeafNode* node, InternalNode* parent, int index );
-    void redistribute( InternalNode* neighbor_node, InternalNode* node, InternalNode* parent, int index );
+    void redistribute( LeafNode* neighbor_node, LeafNode* node, InternalNode* parent, std::size_t index );
+    void redistribute( InternalNode* neighbor_node, InternalNode* node, InternalNode* parent, std::size_t index );
 
     void adjust_root();
 
@@ -70,7 +70,7 @@ private:
     LeafNode* find_leaf_node( KeyType key );
 
 private:
-    const int m_order;
+    const std::size_t m_order;
     Node* m_root;
 };
 

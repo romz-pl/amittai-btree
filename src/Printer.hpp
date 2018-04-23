@@ -6,6 +6,7 @@
 class Node;
 class InternalNode;
 class LeafNode;
+class Record;
 
 class Printer
 {
@@ -20,6 +21,7 @@ public:
 
     static std::string to_string( const LeafNode* leaf, bool verbose = false );
     static std::string to_string( const InternalNode* internal, bool verbose = false );
+    static std::string to_string( const Record& rec );
 
 private:
     void print_empty_tree() const;

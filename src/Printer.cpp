@@ -152,4 +152,11 @@ std::string Printer::to_string( const InternalNode* internal, bool verbose )
     return keyToTextConverter.str();
 }
 
+std::string Printer::to_string( const Record& rec )
+{
+    std::ostringstream oss;
+    oss << rec.value();
+    return oss.str();
+}
+
 

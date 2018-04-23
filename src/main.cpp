@@ -36,7 +36,7 @@ int main()
 
 void test_a()
 {
-    const int order = 10;
+    const std::size_t order = 10;
     BPlusTree tree( order );
 
 
@@ -49,26 +49,26 @@ void test_a()
 
 void test_b()
 {
-    const int order = 10;
-    const int item_no = 100;
+    const std::size_t order = 10;
+    const std::size_t item_no = 100;
     BPlusTree tree( order );
 
-    for( int i = 0; i < item_no; i++ )
+    for( std::size_t i = 0; i < item_no; i++ )
     {
         tree.insert( i, i );
     }
 
-    for( int i = 0; i < item_no; i++ )
+    for( std::size_t i = 0; i < item_no; i++ )
     {
         assert( tree.search( i ) != nullptr );
     }
 
-    for( int i = 0; i < item_no; i++ )
+    for( std::size_t i = 0; i < item_no; i++ )
     {
         tree.remove( i );
     }
 
-    for( int i = 0; i < item_no; i++ )
+    for( std::size_t i = 0; i < item_no; i++ )
     {
         std::cout << i << " " << std::flush;
         assert( tree.search( i ) == nullptr );
@@ -78,16 +78,16 @@ void test_b()
 
 void test_c()
 {
-    const int order = 10;
-    const int item_no = 100;
+    const std::size_t order = 10;
+    const std::size_t item_no = 100;
     BPlusTree tree( order );
 
-    for( int i = 0; i < item_no; i++ )
+    for( std::size_t i = 0; i < item_no; i++ )
     {
         tree.insert( i, i );
     }
 
-    for( int i = 0; i < item_no; i++ )
+    for( std::size_t i = 0; i < item_no; i++ )
     {
         tree.remove( i );
     }
@@ -100,7 +100,7 @@ void test_c()
 
 /*
 
-std::string introMessage(int aOrder) {
+std::string introMessage(std::size_t aOrder) {
     std::ostringstream oss;
     oss << "B+ Tree of Order " << aOrder << std::endl;
     oss << "C++ implementation by Amittai Aviram -- afa13@columbia.edu -- Version " << VERSION << std::endl;
@@ -131,9 +131,9 @@ std::string usageMessage() {
     return message;
 }
 
-int getOrder(int argc, const char * argv[]) {
+std::size_t getOrder(std::size_t argc, const char * argv[]) {
     if (argc > 1) {
-        int order = 0;
+        std::size_t order = 0;
         std::istringstream iss(argv[1]);
         if ((iss >> order) && iss.eof() &&
             order >= MIN_ORDER && order <= MAX_ORDER) {
@@ -151,12 +151,12 @@ int getOrder(int argc, const char * argv[]) {
 
 
 
-int main(int argc, const char * argv[]) {
+std::size_t main(std::size_t argc, const char * argv[]) {
     char instruction;
-    int key = 0;
+    std::size_t key = 0;
     bool quit = false;
     bool verbose = false;
-    int order = getOrder(argc, argv);
+    std::size_t order = getOrder(argc, argv);
     std::cout << introMessage(order);
     std::cout << usageMessage();
     BPlusTree tree(order);
@@ -198,7 +198,7 @@ int main(int argc, const char * argv[]) {
                 quit = true;
                 break;
             case 'r':
-                int key2;
+                std::size_t key2;
                 std::cin >> key;
                 std::cin >> key2;
                 tree.printRange(key, key2);

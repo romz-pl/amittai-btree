@@ -10,7 +10,6 @@ public:
     ~Record() = default;
 
     ValueType value() const;
-    std::string to_string() const;
 
 private:
     ValueType m_value;
