@@ -10,14 +10,17 @@ class Printer
 public:
     Printer();
     bool verbose() const;
-    void setVerbose(bool aVerbose);
-    void printTree(Node* aRoot) const;
-    void printLeaves(Node* aRoot);
+    void set_verbose( bool verbose );
+    void print_tree( Node* root ) const;
+    void print_leaves( Node* root );
+
 private:
-    void printEmptyTree() const;
-    void printNonEmptyTree(Node* aRoot) const;
-    void printCurrentRank(std::queue<Node*>* aCurrentRank, std::queue<Node*>* aNextRank) const;
-    bool fVerbose;
+    void print_empty_tree() const;
+    void print_non_empty_tree( Node* root ) const;
+    void print_current_rank( std::queue< Node* >* current_rank, std::queue< Node* >* next_rank ) const;
+
+private:
+    bool m_verbose;
 };
 
 #endif
