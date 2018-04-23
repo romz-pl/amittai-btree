@@ -74,7 +74,7 @@ void Printer::printCurrentRank(std::queue<Node*>* aCurrentRank, std::queue<Node*
         std::cout << " |";
         if (!currentNode->is_leaf()) {
             auto internalNode = static_cast<InternalNode*>(currentNode);
-            internalNode->queueUpChildren(aNextRank);
+            internalNode->queue_up_children(aNextRank);
         }
         aCurrentRank->pop();
     }
@@ -89,7 +89,7 @@ void Printer::printLeaves(Node *aRoot)
     }
     auto node = aRoot;
     while (!node->is_leaf()) {
-        node = static_cast<InternalNode*>(node)->firstChild();
+        node = static_cast<InternalNode*>(node)->first_child();
     }
     auto leafNode = static_cast<LeafNode*>(node);
     while (leafNode) {

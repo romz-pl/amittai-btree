@@ -86,12 +86,12 @@ void BPlusTree::insertIntoParent(Node *aOldNode, KeyType aKey, Node *aNewNode)
         parent = static_cast<InternalNode*>(fRoot);
         aOldNode->set_parent(parent);
         aNewNode->set_parent(parent);
-        parent->populateNewRoot(aOldNode, aKey, aNewNode);
+        parent->populate_new_root(aOldNode, aKey, aNewNode);
     } else {
-        int newSize = parent->insertNodeAfter(aOldNode, aKey, aNewNode);
+        int newSize = parent->insert_node_after(aOldNode, aKey, aNewNode);
         if (newSize > parent->max_size()) {
             InternalNode* newNode = split(parent);
-            KeyType newKey = newNode->replaceAndReturnFirstKey();
+            KeyType newKey = newNode->replace_and_return_first_key();
             insertIntoParent(parent, newKey, newNode);
         }
     }
@@ -140,7 +140,7 @@ void BPlusTree::coalesceOrRedistribute(N* aNode)
         return;
     }
     auto parent = static_cast<InternalNode*>(aNode->parent());
-    int indexOfNodeInParent = parent->nodeIndex(aNode);
+    int indexOfNodeInParent = parent->node_index(aNode);
     int neighborIndex = (indexOfNodeInParent == 0) ? 1 : indexOfNodeInParent - 1;
     N* neighborNode = static_cast<N*>(parent->neighbor(neighborIndex));
     if (aNode->size() + neighborNode->size() <= neighborNode->max_size()) {
@@ -179,7 +179,7 @@ void BPlusTree::adjustRoot()
 {
     if (!fRoot->is_leaf() && fRoot->size() == 1) {
         auto discardedNode = static_cast<InternalNode*>(fRoot);
-        fRoot = static_cast<InternalNode*>(fRoot)->removeAndReturnOnlyChild();
+        fRoot = static_cast<InternalNode*>(fRoot)->remove_and_return_only_child();
         fRoot->set_parent(nullptr);
         delete discardedNode;
     } else if (!fRoot->size()){

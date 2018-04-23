@@ -196,7 +196,7 @@ void LeafNode::move_first_to_end_of( LeafNode* recipient )
 {
     recipient->copy_last_from(m_mappings.front());
     m_mappings.erase(m_mappings.begin());
-    static_cast<InternalNode*>(parent())->setKeyAt(1, m_mappings.front().first);
+    static_cast<InternalNode*>(parent())->set_key_at(1, m_mappings.front().first);
 }
 
 void LeafNode::copy_last_from( MappingType pair )
@@ -213,5 +213,5 @@ void LeafNode::move_last_to_front_of( LeafNode *recipient, int parent_index )
 void LeafNode::copy_first_from( MappingType aPair, int parent_index )
 {
     m_mappings.insert(m_mappings.begin(), aPair);
-    static_cast<InternalNode*>(parent())->setKeyAt(parent_index, m_mappings.front().first);
+    static_cast<InternalNode*>(parent())->set_key_at(parent_index, m_mappings.front().first);
 }
