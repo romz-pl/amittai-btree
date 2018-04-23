@@ -21,7 +21,7 @@ public:
     /// The default order will provide a reasonable demonstration of the
     /// data structure and its operations.
     explicit BPlusTree( int order = DEFAULT_ORDER );
-    ~BPlusTree() = default;
+    ~BPlusTree();
     
     /// The type used in the API for inserting a new key-value pair
     /// into the tree.  The third item is the type of the Node into
