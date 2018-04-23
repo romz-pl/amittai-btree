@@ -105,7 +105,7 @@ KeyType InternalNode::replaceAndReturnFirstKey()
     return newKey;
 }
 
-void InternalNode::moveHalfTo(InternalNode *aRecipient)
+void InternalNode::move_half_to(InternalNode *aRecipient)
 {
     aRecipient->copyHalfFrom(fMappings);
     size_t size = fMappings.size();
@@ -122,7 +122,7 @@ void InternalNode::copyHalfFrom(std::vector<MappingType> &aMappings)
     }
 }
 
-void InternalNode::moveAllTo(InternalNode *aRecipient, int aIndexInParent)
+void InternalNode::move_all_to(InternalNode *aRecipient, int aIndexInParent)
 {
     fMappings[0].first = static_cast<InternalNode*>(parent())->keyAt(aIndexInParent);
     aRecipient->copyAllFrom(fMappings);
@@ -137,7 +137,7 @@ void InternalNode::copyAllFrom(std::vector<MappingType> &aMappings)
     }
 }
 
-void InternalNode::moveFirstToEndOf(InternalNode *aRecipient)
+void InternalNode::move_first_to_end_of(InternalNode *aRecipient)
 {
     aRecipient->copyLastFrom(fMappings.front());
     fMappings.erase(fMappings.begin());
@@ -150,7 +150,7 @@ void InternalNode::copyLastFrom(MappingType aPair)
     fMappings.back().second->set_parent(this);
 }
 
-void InternalNode::moveLastToFrontOf(InternalNode *aRecipient, int aParentIndex)
+void InternalNode::move_last_to_front_of(InternalNode *aRecipient, int aParentIndex)
 {
     aRecipient->copyFirstFrom(fMappings.back(), aParentIndex);
     fMappings.pop_back();

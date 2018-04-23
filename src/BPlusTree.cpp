@@ -58,7 +58,7 @@ void BPlusTree::insert(KeyType aKey, ValueType aValue)
 
 void BPlusTree::startNewTree(KeyType aKey, ValueType aValue) {
     LeafNode* newLeafNode = new LeafNode(fOrder);
-    newLeafNode->createAndInsertRecord(aKey, aValue);
+    newLeafNode->create_and_insert_record(aKey, aValue);
     fRoot = newLeafNode;
 }
 
@@ -68,12 +68,12 @@ void BPlusTree::insertIntoLeaf(KeyType aKey, ValueType aValue)
     if (!leafNode) {
         throw LeafNotFoundException(aKey);
     }
-    int newSize = leafNode->createAndInsertRecord(aKey, aValue);
+    int newSize = leafNode->create_and_insert_record(aKey, aValue);
     if (newSize > leafNode->max_size()) {
         LeafNode* newLeaf = split(leafNode);
-        newLeaf->setNext(leafNode->next());
-        leafNode->setNext(newLeaf);
-        KeyType newKey = newLeaf->firstKey();
+        newLeaf->set_next(leafNode->next());
+        leafNode->set_next(newLeaf);
+        KeyType newKey = newLeaf->first_key();
         insertIntoParent(leafNode, newKey, newLeaf);
     }
 }
@@ -101,7 +101,7 @@ template <typename T>
 T* BPlusTree::split(T* aNode)
 {
     T* newNode = new T(fOrder, aNode->parent());
-    aNode->moveHalfTo(newNode);
+    aNode->move_half_to(newNode);
     return newNode;
 }
 
@@ -126,7 +126,7 @@ void BPlusTree::removeFromLeaf(KeyType aKey)
     if (!leafNode->lookup(aKey)) {
         return;
     }
-    int newSize = leafNode->removeAndDeleteRecord(aKey);
+    int newSize = leafNode->remove_and_delete_record(aKey);
     if (newSize < leafNode->min_size()) {
         coalesceOrRedistribute(leafNode);
     }
@@ -157,7 +157,7 @@ void BPlusTree::coalesce(N* aNeighborNode, N* aNode, InternalNode* aParent, int 
         std::swap(aNode, aNeighborNode);
         aIndex = 1;
     }
-    aNode->moveAllTo(aNeighborNode, aIndex);
+    aNode->move_all_to(aNeighborNode, aIndex);
     aParent->remove(aIndex);
     if (aParent->size() < aParent->min_size()) {
         coalesceOrRedistribute(aParent);
@@ -169,9 +169,9 @@ template <typename N>
 void BPlusTree::redistribute(N* aNeighborNode, N* aNode, InternalNode* /*aParent*/, int aIndex)
 {
     if (aIndex == 0) {
-        aNeighborNode->moveFirstToEndOf(aNode);
+        aNeighborNode->move_first_to_end_of(aNode);
     } else {
-        aNeighborNode->moveLastToFrontOf(aNode, aIndex);
+        aNeighborNode->move_last_to_front_of(aNode, aIndex);
     }
 }
 
@@ -302,12 +302,12 @@ std::vector<BPlusTree::EntryType> BPlusTree::range(KeyType aStart, KeyType aEnd)
     if (!startLeaf || !endLeaf) {
         return entries;
     }
-    startLeaf->copyRangeStartingFrom(aStart, entries);
+    startLeaf->copy_range_starting_from(aStart, entries);
     startLeaf = startLeaf->next();
     while (startLeaf != endLeaf) {
-        startLeaf->copyRange(entries);
+        startLeaf->copy_range(entries);
         startLeaf = startLeaf->next();
     }
-    startLeaf->copyRangeUntil(aEnd, entries);
+    startLeaf->copy_range_until(aEnd, entries);
     return entries;
 }

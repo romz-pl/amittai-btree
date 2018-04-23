@@ -25,10 +25,14 @@ public:
     void remove(int aIndex);
     Node* removeAndReturnOnlyChild();
     KeyType replaceAndReturnFirstKey();
-    void moveHalfTo(InternalNode* aRecipient);
-    void moveAllTo(InternalNode* aRecipient, int aIndexInParent);
-    void moveFirstToEndOf(InternalNode* aRecipient);
-    void moveLastToFrontOf(InternalNode* aRecipient, int aParentIndex);
+
+
+    void move_half_to(InternalNode* aRecipient);
+    void move_all_to(InternalNode* aRecipient, int aIndexInParent);
+    void move_first_to_end_of(InternalNode* aRecipient);
+    void move_last_to_front_of(InternalNode* aRecipient, int aParentIndex);
+
+
     Node* lookup(KeyType aKey) const;
     int nodeIndex(Node* aNode) const;
     Node* neighbor(int aIndex) const;
