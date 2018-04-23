@@ -3,11 +3,6 @@
 #include "Exceptions.hpp"
 #include "InternalNode.hpp"
 
-InternalNode::InternalNode( std::uint32_t order )
-    : Node( order )
-{
-
-}
 
 InternalNode::InternalNode( std::uint32_t order, InternalNode *parent )
     : Node( order, parent )

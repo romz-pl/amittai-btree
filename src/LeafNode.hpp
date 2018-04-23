@@ -10,7 +10,6 @@
 class LeafNode : public Node
 {
 public:
-    explicit LeafNode( std::uint32_t order );
     LeafNode( std::uint32_t order, InternalNode* parent );
     ~LeafNode();
 

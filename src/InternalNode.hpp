@@ -9,7 +9,6 @@
 class InternalNode : public Node
 {
 public:
-    explicit InternalNode( std::uint32_t order );
     InternalNode( std::uint32_t order, InternalNode* parent );
     ~InternalNode();
 

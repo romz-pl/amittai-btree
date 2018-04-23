@@ -13,7 +13,6 @@ class InternalNode;
 class Node
 {
 public:
-    explicit Node( std::uint32_t order );
     Node( std::uint32_t order, InternalNode *parent );
     virtual ~Node() = default;
 

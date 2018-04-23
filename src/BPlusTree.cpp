@@ -91,7 +91,7 @@ void BPlusTree::insert( KeyType key, ValueType value )
 //
 void BPlusTree::start_new_tree( KeyType key, ValueType value )
 {
-    LeafNode* newLeafNode = new LeafNode( m_order );
+    LeafNode* newLeafNode = new LeafNode( m_order, nullptr );
     newLeafNode->create_and_insert_record( key, value );
     m_root = newLeafNode;
 }
@@ -126,7 +126,7 @@ void BPlusTree::insert_into_parent(  Node *old_node, KeyType key, Node *new_node
     InternalNode* parent = old_node->parent();
     if (parent == nullptr)
     {
-        m_root = new InternalNode( m_order );
+        m_root = new InternalNode( m_order, nullptr );
         parent = static_cast< InternalNode* >( m_root );
         old_node->set_parent( parent );
         new_node->set_parent( parent );

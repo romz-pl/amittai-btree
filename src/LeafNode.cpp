@@ -3,12 +3,6 @@
 #include "InternalNode.hpp"
 #include "LeafNode.hpp"
 
-LeafNode::LeafNode( std::uint32_t order )
-    : Node( order )
-    , m_next{ nullptr }
-{
-
-}
 
 LeafNode::LeafNode( std::uint32_t order, InternalNode* parent )
     : Node( order, parent )

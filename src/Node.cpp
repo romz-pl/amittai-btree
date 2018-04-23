@@ -3,16 +3,6 @@
 //
 //
 //
-Node::Node( std::uint32_t order )
-    : m_order{ order }
-    , m_parent{ nullptr }
-{
-
-}
-
-//
-//
-//
 Node::Node( std::uint32_t order, InternalNode* parent )
     : m_order{ order }
     , m_parent{ parent }
