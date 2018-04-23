@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include "io.h"
-#include "Exceptions.hpp"
 #include "InternalNode.hpp"
 #include "LeafNode.hpp"
 #include "Node.hpp"
