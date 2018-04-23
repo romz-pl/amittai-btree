@@ -60,7 +60,7 @@ private:
     void adjust_root();
 
 
-    LeafNode* find_leaf_node( KeyType key, bool printing = false, bool verbose = false );
+    LeafNode* find_leaf_node( KeyType key );
 
 private:
     const int m_order;

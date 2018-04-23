@@ -185,31 +185,19 @@ void BPlusTree::adjust_root()
     }
 }
 
-LeafNode* BPlusTree::find_leaf_node( KeyType key, bool printing, bool verbose )
+LeafNode* BPlusTree::find_leaf_node( KeyType key )
 {
-    if (is_empty()) {
-        if (printing) {
-            std::cout << "Not found: empty tree." << std::endl;
-        }
+    if( is_empty() )
+    {
         return nullptr;
     }
     auto node = m_root;
-    if (printing) {
-        std::cout << "Root: ";
-        if (m_root->is_leaf()) {
-            std::cout << "\t" << static_cast<LeafNode*>(m_root)->to_string(verbose);
-        } else {
-            std::cout << "\t" << static_cast<InternalNode*>(m_root)->to_string(verbose);
-        }
-        std::cout << std::endl;
+
+    while( !node->is_leaf() )
+    {
+        auto internalNode = static_cast< InternalNode* >( node );
+        node = internalNode->lookup( key );
     }
-    while (!node->is_leaf()) {
-        auto internalNode = static_cast<InternalNode*>(node);
-        if (printing && node != m_root) {
-            std::cout << "\tNode: " << internalNode->to_string(verbose) << std::endl;
-        }
-        node = internalNode->lookup(key);
-    }
-    return static_cast<LeafNode*>(node);
+    return static_cast< LeafNode* >( node );
 }
 
