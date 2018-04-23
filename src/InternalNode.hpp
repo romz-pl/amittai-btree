@@ -9,23 +9,23 @@
 class InternalNode : public Node
 {
 public:
-    explicit InternalNode( int order );
-    InternalNode( int order, InternalNode* parent );
+    explicit InternalNode( std::uint32_t order );
+    InternalNode( std::uint32_t order, InternalNode* parent );
     ~InternalNode();
 
     using MappingType = std::pair< KeyType, Node* >;
 
     bool is_leaf() const override;
-    int size() const override;
-    int min_size() const override;
-    int max_size() const override;
+    std::uint32_t size() const override;
+    std::uint32_t min_size() const override;
+    std::uint32_t max_size() const override;
     std::string to_string( bool verbose = false ) const override;
 
     KeyType key_at( int index ) const;
     void set_key_at( int index, KeyType key );
     Node* first_child() const;
     void populate_new_root( Node* old_node, KeyType new_key, Node* new_node );
-    int insert_node_after( Node* old_node, KeyType new_key, Node* new_node );
+    std::uint32_t insert_node_after( Node* old_node, KeyType new_key, Node* new_node );
     void remove( int index );
     Node* remove_and_return_only_child();
     KeyType replace_and_return_first_key();

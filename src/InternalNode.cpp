@@ -3,13 +3,13 @@
 #include "Exceptions.hpp"
 #include "InternalNode.hpp"
 
-InternalNode::InternalNode( int order )
+InternalNode::InternalNode( std::uint32_t order )
     : Node( order )
 {
 
 }
 
-InternalNode::InternalNode( int order, InternalNode *parent )
+InternalNode::InternalNode( std::uint32_t order, InternalNode *parent )
     : Node( order, parent )
 {
 
@@ -28,17 +28,17 @@ bool InternalNode::is_leaf() const
     return false;
 }
 
-int InternalNode::size() const
+std::uint32_t InternalNode::size() const
 {
-    return static_cast<int>(m_mappings.size());
+    return static_cast< std::uint32_t >( m_mappings.size() );
 }
 
-int InternalNode::min_size() const
+std::uint32_t InternalNode::min_size() const
 {
-    return order()/2;
+    return order() / 2;
 }
 
-int InternalNode::max_size() const
+std::uint32_t InternalNode::max_size() const
 {
     // Includes the first entry, which
     // has key DUMMY_KEY and a value that
@@ -68,7 +68,7 @@ void InternalNode::populate_new_root( Node *old_node, KeyType new_key, Node *new
     m_mappings.push_back( std::make_pair( new_key, new_node ) );
 }
 
-int InternalNode::insert_node_after( Node *old_node, KeyType new_key, Node *new_node )
+std::uint32_t InternalNode::insert_node_after( Node *old_node, KeyType new_key, Node *new_node )
 {
     auto iter = m_mappings.begin();
     for (; iter != m_mappings.end() && iter->second != old_node; ++iter);
@@ -170,9 +170,11 @@ Node* InternalNode::lookup( KeyType key ) const
 
 int InternalNode::node_index( Node *node ) const
 {
-    for (int i = 0; i < size(); ++i) {
-        if (m_mappings[i].second == node) {
-            return static_cast<int>(i);
+    for( std::uint32_t i = 0; i < size(); ++i )
+    {
+        if( m_mappings[ i ].second == node )
+        {
+            return static_cast<int>( i );
         }
     }
     throw NodeNotFoundException(node->to_string(), to_string());
