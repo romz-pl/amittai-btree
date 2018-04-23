@@ -15,12 +15,12 @@ public:
     ~LeafNode() override;
     using MappingType = std::pair<KeyType, Record*>;
     using EntryType = std::tuple<KeyType, ValueType, LeafNode*>;
-    bool isLeaf() const override;
+    bool is_leaf() const override;
     LeafNode* next() const;
     void setNext(LeafNode* aNext);
     int size() const override;
-    int minSize() const override;
-    int maxSize() const override;
+    int min_size() const override;
+    int max_size() const override;
     int createAndInsertRecord(KeyType aKey, ValueType aValue);
     void insert(KeyType aKey, Record* aRecord);
     Record* lookup(KeyType aKey) const;
@@ -33,7 +33,7 @@ public:
     void copyRangeStartingFrom(KeyType aKey, std::vector<EntryType>& aVector);
     void copyRangeUntil(KeyType aKey, std::vector<EntryType>& aVector);
     void copyRange(std::vector<EntryType>& aVector);
-    std::string toString(bool aVerbose = false) const override;
+    std::string to_string(bool aVerbose = false) const override;
 private:
     void copyHalfFrom(std::vector<MappingType>& aMappings);
     void copyAllFrom(std::vector<MappingType>& aMappings);

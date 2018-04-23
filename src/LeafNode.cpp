@@ -33,7 +33,7 @@ LeafNode::~LeafNode()
     }
 }
 
-bool LeafNode::isLeaf() const
+bool LeafNode::is_leaf() const
 {
     return true;
 }
@@ -53,17 +53,17 @@ int LeafNode::size() const
     return static_cast<int>(fMappings.size());
 }
 
-int LeafNode::minSize() const
+int LeafNode::min_size() const
 {
     return order()/2;
 }
 
-int LeafNode::maxSize() const
+int LeafNode::max_size() const
 {
     return order() - 1;
 }
 
-std::string LeafNode::toString(bool aVerbose) const
+std::string LeafNode::to_string(bool aVerbose) const
 {
     std::ostringstream keyToTextConverter;
     if (aVerbose) {
@@ -173,14 +173,14 @@ void LeafNode::moveHalfTo(LeafNode *aRecipient)
 {
     aRecipient->copyHalfFrom(fMappings);
     size_t size = fMappings.size();
-    for (size_t i = minSize(); i < size; ++i) {
+    for (size_t i = min_size(); i < size; ++i) {
         fMappings.pop_back();
     }
 }
 
 void LeafNode::copyHalfFrom(std::vector<std::pair<KeyType, Record*> > &aMappings)
 {
-    for (size_t i = minSize(); i < aMappings.size(); ++i) {
+    for (size_t i = min_size(); i < aMappings.size(); ++i) {
         fMappings.push_back(aMappings[i]);
     }
 }

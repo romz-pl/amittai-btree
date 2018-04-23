@@ -33,7 +33,7 @@ InternalNode::~InternalNode()
     }
 }
 
-bool InternalNode::isLeaf() const
+bool InternalNode::is_leaf() const
 {
     return false;
 }
@@ -43,12 +43,12 @@ int InternalNode::size() const
     return static_cast<int>(fMappings.size());
 }
 
-int InternalNode::minSize() const
+int InternalNode::min_size() const
 {
     return order()/2;
 }
 
-int InternalNode::maxSize() const
+int InternalNode::max_size() const
 {
     // Includes the first entry, which
     // has key DUMMY_KEY and a value that
@@ -109,15 +109,15 @@ void InternalNode::moveHalfTo(InternalNode *aRecipient)
 {
     aRecipient->copyHalfFrom(fMappings);
     size_t size = fMappings.size();
-    for (size_t i = minSize(); i < size; ++i) {
+    for (size_t i = min_size(); i < size; ++i) {
         fMappings.pop_back();
     }
 }
 
 void InternalNode::copyHalfFrom(std::vector<MappingType> &aMappings)
 {
-    for (size_t i = minSize(); i < aMappings.size(); ++i) {
-        aMappings[i].second->setParent(this);
+    for (size_t i = min_size(); i < aMappings.size(); ++i) {
+        aMappings[i].second->set_parent(this);
         fMappings.push_back(aMappings[i]);
     }
 }
@@ -132,7 +132,7 @@ void InternalNode::moveAllTo(InternalNode *aRecipient, int aIndexInParent)
 void InternalNode::copyAllFrom(std::vector<MappingType> &aMappings)
 {
     for (auto mapping : aMappings) {
-        mapping.second->setParent(this);
+        mapping.second->set_parent(this);
         fMappings.push_back(mapping);
     }
 }
@@ -147,7 +147,7 @@ void InternalNode::moveFirstToEndOf(InternalNode *aRecipient)
 void InternalNode::copyLastFrom(MappingType aPair)
 {
     fMappings.push_back(aPair);
-    fMappings.back().second->setParent(this);
+    fMappings.back().second->set_parent(this);
 }
 
 void InternalNode::moveLastToFrontOf(InternalNode *aRecipient, int aParentIndex)
@@ -161,7 +161,7 @@ void InternalNode::copyFirstFrom(MappingType aPair, int aParentIndex)
     fMappings.front().first = static_cast<InternalNode*>(parent())->keyAt(aParentIndex);
     fMappings.insert(fMappings.begin(), aPair);
     fMappings.front().first = DUMMY_KEY;
-    fMappings.front().second->setParent(this);
+    fMappings.front().second->set_parent(this);
     static_cast<InternalNode*>(parent())->setKeyAt(aParentIndex, fMappings.front().first);
 }
 
@@ -185,7 +185,7 @@ int InternalNode::nodeIndex(Node *aNode) const
             return static_cast<int>(i);
         }
     }
-    throw NodeNotFoundException(aNode->toString(), toString());
+    throw NodeNotFoundException(aNode->to_string(), to_string());
 }
 
 Node* InternalNode::neighbor(int aIndex) const
@@ -193,7 +193,7 @@ Node* InternalNode::neighbor(int aIndex) const
     return fMappings[aIndex].second;
 }
 
-std::string InternalNode::toString(bool aVerbose) const
+std::string InternalNode::to_string(bool aVerbose) const
 {
     if (fMappings.empty()) {
         return "";

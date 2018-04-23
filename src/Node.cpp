@@ -1,46 +1,53 @@
-//
-//  Node.cpp
-//  BPlusTree.2a
-//
-//  Created by Amittai Aviram on 6/10/16.
-//  Copyright © 2016 Amittai Aviram. All rights reserved.
-//
-//  Licensed under the Apache License, Version 2.0 (the "License");
-//  you may not use this file except in compliance with the License.
-//  You may obtain a copy of the License at
-//
-//  http://www.apache.org/licenses/LICENSE-2.0
-//
-//  Unless required by applicable law or agreed to in writing, software
-//  distributed under the License is distributed on an "AS IS" BASIS,
-//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-//  See the License for the specific language governing permissions and
-//  limitations under the License.
-
 #include "Node.hpp"
 
-Node::Node(int aOrder) : fOrder{aOrder}, fParent{nullptr} {}
+//
+//
+//
+Node::Node( int order )
+    : m_order{ order }
+    , m_parent{ nullptr }
+{
 
-Node::Node(int aOrder, Node* aParent) : fOrder{aOrder}, fParent{aParent} {}
+}
 
-Node::~Node() {}
+//
+//
+//
+Node::Node( int order, Node* parent )
+    : m_order{ order }
+    , m_parent{ parent }
+{
 
+}
+
+//
+//
+//
 int Node::order() const
 {
-    return fOrder;
+    return m_order;
 }
 
+//
+//
+//
 Node* Node::parent() const
 {
-    return fParent;
+    return m_parent;
 }
 
-void Node::setParent(Node* aParent)
+//
+//
+//
+void Node::set_parent( Node* parent )
 {
-    fParent = aParent;
+    m_parent = parent;
 }
 
-bool Node::isRoot() const
+//
+//
+//
+bool Node::is_root() const
 {
-    return !fParent;
+    return !m_parent;
 }
