@@ -55,7 +55,9 @@ private:
     LeafNode* split( LeafNode* node );
     InternalNode* split( InternalNode* node );
 
-    template< typename N > void coalesce_or_redistribute( N* node );
+    void coalesce_or_redistribute( LeafNode* node );
+    void coalesce_or_redistribute( InternalNode* node );
+
     template< typename N > void coalesce( N* neighbor_node, N* node, InternalNode* parent, int index );
     template< typename N > void redistribute( N* neighbor_node, N* node, InternalNode* parent, int index );
 

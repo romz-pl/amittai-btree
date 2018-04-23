@@ -136,8 +136,8 @@ void BPlusTree::remove_from_leaf( KeyType key )
     }
 }
 
-template< typename N >
-void BPlusTree::coalesce_or_redistribute( N* node )
+
+void BPlusTree::coalesce_or_redistribute( LeafNode* node )
 {
     if (node->is_root()) {
         adjust_root();
@@ -146,7 +146,25 @@ void BPlusTree::coalesce_or_redistribute( N* node )
     auto parent = static_cast<InternalNode*>(node->parent());
     int indexOfNodeInParent = parent->node_index(node);
     int neighborIndex = (indexOfNodeInParent == 0) ? 1 : indexOfNodeInParent - 1;
-    N* neighborNode = static_cast<N*>(parent->neighbor(neighborIndex));
+    LeafNode* neighborNode = static_cast<LeafNode*>(parent->neighbor(neighborIndex));
+    if (node->size() + neighborNode->size() <= neighborNode->max_size()) {
+        coalesce(neighborNode, node, parent, indexOfNodeInParent);
+    } else {
+        redistribute(neighborNode, node, parent, indexOfNodeInParent);
+    }
+}
+
+
+void BPlusTree::coalesce_or_redistribute( InternalNode* node )
+{
+    if (node->is_root()) {
+        adjust_root();
+        return;
+    }
+    auto parent = static_cast<InternalNode*>(node->parent());
+    int indexOfNodeInParent = parent->node_index(node);
+    int neighborIndex = (indexOfNodeInParent == 0) ? 1 : indexOfNodeInParent - 1;
+    InternalNode* neighborNode = static_cast<InternalNode*>(parent->neighbor(neighborIndex));
     if (node->size() + neighborNode->size() <= neighborNode->max_size()) {
         coalesce(neighborNode, node, parent, indexOfNodeInParent);
     } else {
