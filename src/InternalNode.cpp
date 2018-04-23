@@ -1,6 +1,8 @@
 #include <iostream>
 #include <sstream>
-#include "Exceptions.hpp"
+#include <algorithm>
+#include <cassert>
+#include <iterator>
 #include "InternalNode.hpp"
 
 
@@ -165,14 +167,14 @@ Node* InternalNode::lookup( KeyType key ) const
 
 int InternalNode::node_index( Node *node ) const
 {
-    for( std::uint32_t i = 0; i < size(); ++i )
-    {
-        if( m_mappings[ i ].second == node )
-        {
-            return static_cast<int>( i );
-        }
-    }
-    throw NodeNotFoundException(node->to_string(), to_string());
+    const auto pred = [ node ]( const MappingType& v ){ return( v.second == node ); };
+    const auto ff = std::find_if( m_mappings.begin(), m_mappings.end(), pred );
+    assert( ff != m_mappings.end() );
+
+    const auto index = std::distance( m_mappings.begin(), ff );
+    assert( index >= 0 );
+
+    return static_cast< int >( index );
 }
 
 Node* InternalNode::neighbor( int index ) const
