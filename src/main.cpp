@@ -43,7 +43,7 @@ void test_a()
    tree.insert( 1, 1 );
    tree.remove( 1 );
 
-   assert( tree.isEmpty() );
+   assert( tree.is_empty() );
 
 }
 
@@ -92,7 +92,7 @@ void test_c()
         tree.remove( i );
     }
 
-    assert( tree.isEmpty() );
+    assert( tree.is_empty() );
 
 }
 

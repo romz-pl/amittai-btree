@@ -36,7 +36,7 @@ TEST( btree, one_item )
     tree.remove( k );
 
     ASSERT_TRUE( tree.search( k ) == nullptr  );
-    ASSERT_TRUE( tree.isEmpty() );
+    ASSERT_TRUE( tree.is_empty() );
 }
 
 /*
@@ -67,7 +67,7 @@ TEST( btree, more_items )
         ASSERT_TRUE( tree.search( i ) == nullptr );
     }
 
-    ASSERT_TRUE( tree.isEmpty() );
+    ASSERT_TRUE( tree.is_empty() );
 
 }
 */
@@ -100,7 +100,7 @@ TEST( btree, reverse_erase )
         ASSERT_TRUE( tree.search( i ) == nullptr );
     }
 
-    ASSERT_TRUE( tree.isEmpty() );
+    ASSERT_TRUE( tree.is_empty() );
 
 }
 
@@ -138,7 +138,7 @@ TEST( btree, insert_search_delete )
         ASSERT_TRUE( tree.search( v ) == nullptr );
     }
 
-    ASSERT_TRUE( tree.isEmpty() );
+    ASSERT_TRUE( tree.is_empty() );
 }
 */
 
@@ -218,7 +218,7 @@ TEST( btree, erase_random )
         tree.remove( key );
     }
 
-    ASSERT_TRUE( tree.isEmpty() );
+    ASSERT_TRUE( tree.is_empty() );
 }
 
 
