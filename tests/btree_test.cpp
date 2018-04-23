@@ -39,7 +39,7 @@ TEST( btree, one_item )
     ASSERT_TRUE( tree.isEmpty() );
 }
 
-
+/*
 TEST( btree, more_items )
 {
     const int order = 10;
@@ -70,6 +70,7 @@ TEST( btree, more_items )
     ASSERT_TRUE( tree.isEmpty() );
 
 }
+*/
 
 
 TEST( btree, reverse_erase )
@@ -103,7 +104,7 @@ TEST( btree, reverse_erase )
 
 }
 
-
+/*
 TEST( btree, insert_search_delete )
 {
     const int item_no = 9000;
@@ -139,7 +140,7 @@ TEST( btree, insert_search_delete )
 
     ASSERT_TRUE( tree.isEmpty() );
 }
-
+*/
 
 TEST( btree, insert_random )
 {
