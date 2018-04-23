@@ -64,8 +64,8 @@ Node* InternalNode::first_child() const
 
 void InternalNode::populate_new_root( Node *old_node, KeyType new_key, Node *new_node )
 {
-    m_mappings.push_back(std::make_pair(DUMMY_KEY, old_node));
-    m_mappings.push_back(std::make_pair(new_key, new_node));
+    m_mappings.push_back( std::make_pair( DUMMY_KEY, old_node ) );
+    m_mappings.push_back( std::make_pair( new_key, new_node ) );
 }
 
 int InternalNode::insert_node_after( Node *old_node, KeyType new_key, Node *new_node )

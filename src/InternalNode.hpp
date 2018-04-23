@@ -50,6 +50,9 @@ private:
 
 private:
     std::vector< MappingType > m_mappings;
+
+    // Key used where only the entry's pointer has meaning.
+    const KeyType DUMMY_KEY{-1};
 };
 
 
