@@ -1,5 +1,4 @@
 #include <iostream>
-#include <fstream>
 #include <string>
 #include "BPlusTree.hpp"
 #include "Exceptions.hpp"
@@ -14,10 +13,21 @@ BPlusTree::BPlusTree( int order )
 
 }
 
+void BPlusTree::destroy_tree()
+{
+    if (m_root->is_leaf()) {
+        delete static_cast<LeafNode*>(m_root);
+    } else {
+        delete static_cast<InternalNode*>(m_root);
+    }
+    m_root = nullptr;
+}
+
 bool BPlusTree::is_empty() const
 {
     return !m_root;
 }
+
 
 Record* BPlusTree::search( KeyType key )
 {
@@ -28,6 +38,7 @@ Record* BPlusTree::search( KeyType key )
     }
     return leafNode->lookup( key );
 }
+
 
 
 // INSERTION
@@ -174,9 +185,6 @@ void BPlusTree::adjust_root()
     }
 }
 
-
-// UTILITIES AND PRINTING
-
 LeafNode* BPlusTree::find_leaf_node( KeyType key, bool printing, bool verbose )
 {
     if (is_empty()) {
@@ -205,95 +213,3 @@ LeafNode* BPlusTree::find_leaf_node( KeyType key, bool printing, bool verbose )
     return static_cast<LeafNode*>(node);
 }
 
-void BPlusTree::read_input_from_file( std::string file_name )
-{
-    int key;
-    std::ifstream input(file_name);
-    while (input) {
-        input >> key;
-        insert(key, key);
-    }
-}
-
-void BPlusTree::print( bool verbose )
-{
-    m_printer.set_verbose(verbose);
-    m_printer.print_tree(m_root);
-}
-
-void BPlusTree::print_leaves( bool verbose )
-{
-    m_printer.set_verbose(verbose);
-    m_printer.print_leaves(m_root);
-}
-
-void BPlusTree::destroy_tree()
-{
-    if (m_root->is_leaf()) {
-        delete static_cast<LeafNode*>(m_root);
-    } else {
-        delete static_cast<InternalNode*>(m_root);
-    }
-    m_root = nullptr;
-}
-
-void BPlusTree::print_value( KeyType key, bool verbose )
-{
-    print_value(key, false, verbose);
-}
-
-void BPlusTree::print_value( KeyType key, bool print_path, bool verbose )
-{
-    LeafNode* leaf = find_leaf_node(key, print_path, verbose);
-    if (!leaf) {
-        std::cout << "Leaf not found with key " << key << "." << std::endl;
-        return;
-    }
-    if (print_path) {
-        std::cout << "\t";
-    }
-    std::cout << "Leaf: " << leaf->to_string(verbose) << std::endl;
-    Record* record = leaf->lookup(key);
-    if (!record) {
-        std::cout << "Record not found with key " << key << "." << std::endl;
-        return;
-    }
-    if (print_path) {
-        std::cout << "\t";
-    }
-    std::cout << "Record found at location " << std::hex << record << std::dec << ":" << std::endl;
-    std::cout << "\tKey: " << key << "   Value: " << record->value() << std::endl;
-}
-
-void BPlusTree::print_path_to( KeyType key, bool verbose )
-{
-    print_value(key, true, verbose);
-}
-
-void BPlusTree::print_range( KeyType start, KeyType end )
-{
-    auto rangeVector = range(start, end);
-    for (auto entry : rangeVector) {
-        std::cout << "Key: " << std::get<0>(entry);
-        std::cout << "    Value: " << std::get<1>(entry);
-        std::cout << "    Leaf: " << std::hex << std::get<2>(entry) << std::dec << std::endl;
-    }
-}
-
-std::vector< BPlusTree::EntryType > BPlusTree::range( KeyType start, KeyType end )
-{
-    auto startLeaf = find_leaf_node(start);
-    auto endLeaf = find_leaf_node(end);
-    std::vector<std::tuple<KeyType, ValueType, LeafNode*>> entries;
-    if (!startLeaf || !endLeaf) {
-        return entries;
-    }
-    startLeaf->copy_range_starting_from(start, entries);
-    startLeaf = startLeaf->next();
-    while (startLeaf != endLeaf) {
-        startLeaf->copy_range(entries);
-        startLeaf = startLeaf->next();
-    }
-    startLeaf->copy_range_until(end, entries);
-    return entries;
-}
