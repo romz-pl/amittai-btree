@@ -39,15 +39,15 @@ public:
     const LeafNode* leaf() const override;
 
 private:
-    void copy_half_from( const std::vector< LeafElt >& mapp );
-    void copy_all_from( const std::vector< LeafElt >& mapp );
+    void copy_half_from( const std::vector< LeafElt >& ve );
+    void copy_all_from( const std::vector< LeafElt >& ve );
     void copy_last_from( const LeafElt &pair );
     void copy_first_from( const LeafElt &pair, std::size_t parent_index );
 
     bool is_sorted() const;
 
 private:
-    std::vector< LeafElt > m_mappings;
+    std::vector< LeafElt > m_elt;
 
     LeafNode* m_next;
 };

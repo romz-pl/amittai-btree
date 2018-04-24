@@ -88,7 +88,7 @@ void Printer::print_leaves( Node *root )
 
 void Printer::internal_node_queue_up_children( InternalNode* internal, std::queue< Node* >* queue ) const
 {
-    for (auto mapping : internal->m_mappings)
+    for (auto mapping : internal->m_elt)
     {
         queue->push(mapping.m_node);
     }
@@ -108,10 +108,10 @@ std::string Printer::to_string( const LeafNode* leaf, bool verbose )
 {
     std::ostringstream keyToTextConverter;
     if (verbose) {
-        keyToTextConverter << "[" << std::hex << leaf << std::dec << "]<" << leaf->m_mappings.size() << "> ";
+        keyToTextConverter << "[" << std::hex << leaf << std::dec << "]<" << leaf->m_elt.size() << "> ";
     }
     bool first = true;
-    for (auto mapping : leaf->m_mappings) {
+    for (auto mapping : leaf->m_elt) {
         if (first) {
             first = false;
         } else {
@@ -127,15 +127,15 @@ std::string Printer::to_string( const LeafNode* leaf, bool verbose )
 
 std::string Printer::to_string( const InternalNode* internal, bool verbose )
 {
-    if (internal->m_mappings.empty()) {
+    if (internal->m_elt.empty()) {
         return "";
     }
     std::ostringstream keyToTextConverter;
     if (verbose) {
-        keyToTextConverter << "[" << std::hex << internal << std::dec << "]<" << internal->m_mappings.size() << "> ";
+        keyToTextConverter << "[" << std::hex << internal << std::dec << "]<" << internal->m_elt.size() << "> ";
     }
-    auto entry = verbose ? internal->m_mappings.begin() : internal->m_mappings.begin() + 1;
-    auto end = internal->m_mappings.end();
+    auto entry = verbose ? internal->m_elt.begin() : internal->m_elt.begin() + 1;
+    auto end = internal->m_elt.end();
     bool first = true;
     while (entry != end) {
         if (first) {

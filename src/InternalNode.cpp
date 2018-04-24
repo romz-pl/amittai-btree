@@ -19,7 +19,7 @@ InternalNode::InternalNode( std::size_t order, InternalNode *parent )
 //
 InternalNode::~InternalNode()
 {
-    for( auto mapping : m_mappings )
+    for( auto mapping : m_elt )
     {
         delete mapping.m_node;
     }
@@ -38,7 +38,7 @@ bool InternalNode::is_leaf() const
 //
 std::size_t InternalNode::size() const
 {
-    return m_mappings.size();
+    return m_elt.size();
 }
 
 //
@@ -66,8 +66,8 @@ std::size_t InternalNode::max_size() const
 //
 KeyType InternalNode::key_at( std::size_t index ) const
 {
-    assert( index < m_mappings.size() );
-    return m_mappings[ index ].m_key;
+    assert( index < m_elt.size() );
+    return m_elt[ index ].m_key;
 }
 
 //
@@ -75,8 +75,8 @@ KeyType InternalNode::key_at( std::size_t index ) const
 //
 void InternalNode::set_key_at( std::size_t index, KeyType key )
 {
-    assert( index < m_mappings.size() );
-    m_mappings[ index ].m_key = key;
+    assert( index < m_elt.size() );
+    m_elt[ index ].m_key = key;
 }
 
 //
@@ -84,8 +84,8 @@ void InternalNode::set_key_at( std::size_t index, KeyType key )
 //
 Node* InternalNode::first_child() const
 {
-    assert( !m_mappings.empty() );
-    return m_mappings.front().m_node;
+    assert( !m_elt.empty() );
+    return m_elt.front().m_node;
 }
 
 //
@@ -95,9 +95,9 @@ void InternalNode::populate_new_root( Node *old_node, KeyType new_key, Node *new
 {
     // assert( is_sorted() );
 
-    assert( m_mappings.empty() );
-    m_mappings.push_back( InternalElt( DUMMY_KEY, old_node ) );
-    m_mappings.push_back( InternalElt( new_key, new_node ) );
+    assert( m_elt.empty() );
+    m_elt.push_back( InternalElt( DUMMY_KEY, old_node ) );
+    m_elt.push_back( InternalElt( new_key, new_node ) );
 
     // assert( is_sorted() );
 }
@@ -110,10 +110,10 @@ std::size_t InternalNode::insert_node_after( Node *old_node, KeyType new_key, No
     // assert( is_sorted() );
 
     const auto pred = [ old_node ]( const InternalElt& e ){ return e.m_node == old_node; };
-    const auto iter = std::find_if( m_mappings.begin(), m_mappings.end(), pred );
-    assert( iter != m_mappings.end() );
+    const auto iter = std::find_if( m_elt.begin(), m_elt.end(), pred );
+    assert( iter != m_elt.end() );
 
-    m_mappings.insert( iter + 1, InternalElt( new_key, new_node ) );
+    m_elt.insert( iter + 1, InternalElt( new_key, new_node ) );
 
     // assert( is_sorted() );
     return size();
@@ -126,8 +126,8 @@ void InternalNode::remove( std::size_t index )
 {
     // assert( is_sorted() );
 
-    assert( index < m_mappings.size() );
-    m_mappings.erase( m_mappings.begin() + index );
+    assert( index < m_elt.size() );
+    m_elt.erase( m_elt.begin() + index );
 
     // assert( is_sorted() );
 }
@@ -139,9 +139,9 @@ Node* InternalNode::remove_and_return_only_child()
 {
     // assert( is_sorted() );
 
-    assert( m_mappings.size() == 1 );
-    Node* first_child = m_mappings.front().m_node;
-    m_mappings.pop_back();
+    assert( m_elt.size() == 1 );
+    Node* first_child = m_elt.front().m_node;
+    m_elt.pop_back();
 
     // assert( is_sorted() );
 
@@ -155,8 +155,8 @@ KeyType InternalNode::replace_and_return_first_key()
 {
     // assert( is_sorted() );
 
-    KeyType new_key = m_mappings[ 0 ].m_key;
-    m_mappings[ 0 ].m_key = KeyType( DUMMY_KEY );
+    KeyType new_key = m_elt[ 0 ].m_key;
+    m_elt[ 0 ].m_key = KeyType( DUMMY_KEY );
 
     // assert( is_sorted() );
     return new_key;
@@ -169,11 +169,11 @@ void InternalNode::move_half_to( InternalNode *recipient )
 {
     // assert( is_sorted() );
 
-    recipient->copy_half_from( m_mappings );
-    const std::size_t size = m_mappings.size();
+    recipient->copy_half_from( m_elt );
+    const std::size_t size = m_elt.size();
     for( std::size_t i = min_size(); i < size; ++i )
     {
-        m_mappings.pop_back();
+        m_elt.pop_back();
     }
 
     // assert( is_sorted() );
@@ -182,14 +182,14 @@ void InternalNode::move_half_to( InternalNode *recipient )
 //
 //
 //
-void InternalNode::copy_half_from( const std::vector< InternalElt >& mapp )
+void InternalNode::copy_half_from(const std::vector< InternalElt >& ve )
 {
     // assert( is_sorted() );
 
-    for( std::size_t i = min_size(); i < mapp.size(); ++i )
+    for( std::size_t i = min_size(); i < ve.size(); ++i )
     {
-        mapp[ i ].m_node->set_parent( this );
-        m_mappings.push_back( mapp[ i ] );
+        ve[ i ].m_node->set_parent( this );
+        m_elt.push_back( ve[ i ] );
     }
 
     // assert( is_sorted() );
@@ -202,9 +202,9 @@ void InternalNode::move_all_to( InternalNode *recipient, std::size_t index_in_pa
 {
     // assert( is_sorted() );
 
-    m_mappings[ 0 ].m_key = parent()->key_at( index_in_parent );
-    recipient->copy_all_from( m_mappings );
-    m_mappings.clear();
+    m_elt[ 0 ].m_key = parent()->key_at( index_in_parent );
+    recipient->copy_all_from( m_elt );
+    m_elt.clear();
 
     // assert( is_sorted() );
 }
@@ -212,14 +212,14 @@ void InternalNode::move_all_to( InternalNode *recipient, std::size_t index_in_pa
 //
 //
 //
-void InternalNode::copy_all_from( const std::vector< InternalElt > &mapp )
+void InternalNode::copy_all_from(const std::vector< InternalElt >& ve )
 {
     // assert( is_sorted() );
 
-    for( auto m : mapp )
+    for( auto m : ve )
     {
         m.m_node->set_parent( this );
-        m_mappings.push_back( m );
+        m_elt.push_back( m );
     }
 
     // assert( is_sorted() );
@@ -232,9 +232,9 @@ void InternalNode::move_first_to_end_of( InternalNode *recipient )
 {
     // assert( is_sorted() );
 
-    recipient->copy_last_from( m_mappings.front() );
-    m_mappings.erase( m_mappings.begin() );
-    parent()->set_key_at( 1, m_mappings.front().m_key );
+    recipient->copy_last_from( m_elt.front() );
+    m_elt.erase( m_elt.begin() );
+    parent()->set_key_at( 1, m_elt.front().m_key );
 
     // assert( is_sorted() );
 }
@@ -246,8 +246,8 @@ void InternalNode::copy_last_from( const InternalElt& pair )
 {
     // assert( is_sorted() );
 
-    m_mappings.push_back( pair );
-    m_mappings.back().m_node->set_parent( this );
+    m_elt.push_back( pair );
+    m_elt.back().m_node->set_parent( this );
 
     // assert( is_sorted() );
 }
@@ -259,8 +259,8 @@ void InternalNode::move_last_to_front_of( InternalNode *recipient, std::size_t p
 {
     // assert( is_sorted() );
 
-    recipient->copy_first_from( m_mappings.back(), parent_index );
-    m_mappings.pop_back();
+    recipient->copy_first_from( m_elt.back(), parent_index );
+    m_elt.pop_back();
 
     // assert( is_sorted() );
 }
@@ -272,11 +272,11 @@ void InternalNode::copy_first_from( const InternalElt& pair, std::size_t parent_
 {
     // assert( is_sorted() );
 
-    m_mappings.front().m_key = parent()->key_at( parent_index );
-    m_mappings.insert( m_mappings.begin(), pair );
-    m_mappings.front().m_key = KeyType( DUMMY_KEY );
-    m_mappings.front().m_node->set_parent( this );
-    parent()->set_key_at( parent_index, m_mappings.front().m_key );
+    m_elt.front().m_key = parent()->key_at( parent_index );
+    m_elt.insert( m_elt.begin(), pair );
+    m_elt.front().m_key = KeyType( DUMMY_KEY );
+    m_elt.front().m_node->set_parent( this );
+    parent()->set_key_at( parent_index, m_elt.front().m_key );
 
     // assert( is_sorted() );
 }
@@ -297,8 +297,8 @@ Node* InternalNode::lookup( KeyType key ) const
         exit(1);
     }
 */
-    auto locator = m_mappings.begin();
-    auto end = m_mappings.end();
+    auto locator = m_elt.begin();
+    auto end = m_elt.end();
     while( locator != end && key >= locator->m_key )
     {
         ++locator;
@@ -317,10 +317,10 @@ std::size_t InternalNode::node_index( Node *node ) const
     // assert( is_sorted() );
 
     const auto pred = [ node ]( const InternalElt& v ){ return( v.m_node == node ); };
-    const auto ff = std::find_if( m_mappings.begin(), m_mappings.end(), pred );
-    assert( ff != m_mappings.end() );
+    const auto ff = std::find_if( m_elt.begin(), m_elt.end(), pred );
+    assert( ff != m_elt.end() );
 
-    const auto index = std::distance( m_mappings.begin(), ff );
+    const auto index = std::distance( m_elt.begin(), ff );
     assert( index >= 0 );
 
     return static_cast< std::size_t >( index );
@@ -333,7 +333,7 @@ Node* InternalNode::neighbor( std::size_t index ) const
 {
     // assert( is_sorted() );
 
-    return m_mappings[ index ].m_node;
+    return m_elt[ index ].m_node;
 }
 
 //
@@ -343,7 +343,7 @@ bool InternalNode::is_sorted() const
 {
     const auto pred = []( const InternalElt& ma, const InternalElt& mb ){ return ma.m_key < mb.m_key ; };
 
-    return std::is_sorted( m_mappings.begin(), m_mappings.end(), pred );
+    return std::is_sorted( m_elt.begin(), m_elt.end(), pred );
 }
 
 //

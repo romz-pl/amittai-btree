@@ -51,15 +51,15 @@ public:
 
 
 private:
-    void copy_half_from( const std::vector< InternalElt >& mapp );
-    void copy_all_from( const std::vector< InternalElt > &mapp );
+    void copy_half_from( const std::vector< InternalElt >& ve );
+    void copy_all_from( const std::vector< InternalElt >& ve );
     void copy_last_from( const InternalElt& pair );
     void copy_first_from( const InternalElt& pair, std::size_t parent_index );
 
     bool is_sorted() const;
 
 private:
-    std::vector< InternalElt > m_mappings;
+    std::vector< InternalElt > m_elt;
 
     // Key used where only the entry's pointer has meaning.
     const KeyType DUMMY_KEY{-1};
