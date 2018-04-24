@@ -1,4 +1,5 @@
 #include <stdexcept>
+#include <algorithm>
 #include "LeafNode.hpp"
 #include "InternalNode.hpp"
 
@@ -57,7 +58,7 @@ std::size_t LeafNode::create_and_insert_record( KeyType key, ValueType value )
         Record* new_record = new Record( value );
         insert( key, new_record );
     }
-    return static_cast< std::size_t >( m_mappings.size() );
+    return m_mappings.size();
 }
 
 void LeafNode::insert( KeyType key, Record* record )
@@ -73,13 +74,14 @@ void LeafNode::insert( KeyType key, Record* record )
 
 Record* LeafNode::lookup( KeyType key ) const
 {
-    for( auto mapping : m_mappings )
+    const auto pred = [ key ]( const MappingType& m ){ return m.first == key; };
+    const auto it = std::find_if( m_mappings.begin(), m_mappings.end(), pred );
+
+    if( it != m_mappings.end() )
     {
-        if( mapping.first == key )
-        {
-            return mapping.second;
-        }
+        return it->second;
     }
+
     return nullptr;
 }
 
