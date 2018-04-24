@@ -138,13 +138,13 @@ void LeafNode::move_half_to( LeafNode *recipient )
     assert( is_sorted() );
 }
 
-void LeafNode::copy_half_from( std::vector< std::pair< KeyType, Record* > > &mappings )
+void LeafNode::copy_half_from( const std::vector< std::pair< KeyType, Record* > > &mapp )
 {
     assert( is_sorted() );
 
-    for( std::size_t i = min_size(); i < mappings.size(); ++i )
+    for( std::size_t i = min_size(); i < mapp.size(); ++i )
     {
-        m_mappings.push_back( mappings[ i ] );
+        m_mappings.push_back( mapp[ i ] );
     }
     assert( is_sorted() );
 }
@@ -158,13 +158,16 @@ void LeafNode::move_all_to( LeafNode *recipient )
     assert( is_sorted() );
 }
 
-void LeafNode::copy_all_from( std::vector< std::pair< KeyType, Record* > > &mappings )
+void LeafNode::copy_all_from( const std::vector< std::pair< KeyType, Record* > > &mapp )
 {
     assert( is_sorted() );
-    for( auto m : mappings )
-    {
-        m_mappings.push_back( m );
-    }
+//    for( auto m : mapp )
+//    {
+//        m_mappings.push_back( m );
+//    }
+
+    m_mappings.reserve( m_mappings.size() + mapp.size() );
+    m_mappings.insert( m_mappings.end(), mapp.begin(), mapp.end() );
     assert( is_sorted() );
 }
 
@@ -179,7 +182,7 @@ void LeafNode::move_first_to_end_of( LeafNode* recipient )
     assert( is_sorted() );
 }
 
-void LeafNode::copy_last_from( MappingType pair )
+void LeafNode::copy_last_from( const MappingType& pair )
 {
     assert( is_sorted() );
     m_mappings.push_back( pair );
@@ -194,7 +197,7 @@ void LeafNode::move_last_to_front_of( LeafNode *recipient, std::size_t parent_in
     assert( is_sorted() );
 }
 
-void LeafNode::copy_first_from( MappingType pair, std::size_t parent_index )
+void LeafNode::copy_first_from( const MappingType& pair, std::size_t parent_index )
 {
     assert( is_sorted() );
     m_mappings.insert( m_mappings.begin(), pair );

@@ -42,10 +42,10 @@ public:
 
 
 private:
-    void copy_half_from( std::vector< MappingType >& mappings );
-    void copy_all_from( std::vector< MappingType >& mappings );
-    void copy_last_from( MappingType pair );
-    void copy_first_from( MappingType pair, std::size_t parent_index );
+    void copy_half_from( const std::vector< MappingType >& mapp );
+    void copy_all_from( const std::vector< MappingType >& mapp );
+    void copy_last_from( const MappingType &pair );
+    void copy_first_from( const MappingType &pair, std::size_t parent_index );
 
     bool is_sorted() const;
 
