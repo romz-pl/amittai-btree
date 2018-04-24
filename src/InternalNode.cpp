@@ -95,6 +95,7 @@ void InternalNode::populate_new_root( Node *old_node, KeyType new_key, Node *new
 {
     // assert( is_sorted() );
 
+    assert( m_mappings.empty() );
     m_mappings.push_back( InternalElt( DUMMY_KEY, old_node ) );
     m_mappings.push_back( InternalElt( new_key, new_node ) );
 
@@ -125,6 +126,7 @@ void InternalNode::remove( std::size_t index )
 {
     // assert( is_sorted() );
 
+    assert( index < m_mappings.size() );
     m_mappings.erase( m_mappings.begin() + index );
 
     // assert( is_sorted() );
@@ -137,6 +139,7 @@ Node* InternalNode::remove_and_return_only_child()
 {
     // assert( is_sorted() );
 
+    assert( m_mappings.size() == 1 );
     Node* first_child = m_mappings.front().m_node;
     m_mappings.pop_back();
 
