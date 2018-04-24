@@ -25,9 +25,12 @@ public:
 
     KeyType key_at( std::size_t index ) const;
     void set_key_at( std::size_t index, KeyType key );
+
     Node* first_child() const;
+
     void populate_new_root( Node* old_node, KeyType new_key, Node* new_node );
     std::size_t insert_node_after( Node* old_node, KeyType new_key, Node* new_node );
+
     void remove( std::size_t index );
     Node* remove_and_return_only_child();
     KeyType replace_and_return_first_key();
