@@ -66,6 +66,7 @@ std::size_t InternalNode::max_size() const
 //
 KeyType InternalNode::key_at( std::size_t index ) const
 {
+    assert( index < m_mappings.size() );
     return m_mappings[ index ].m_key;
 }
 
@@ -74,6 +75,7 @@ KeyType InternalNode::key_at( std::size_t index ) const
 //
 void InternalNode::set_key_at( std::size_t index, KeyType key )
 {
+    assert( index < m_mappings.size() );
     m_mappings[ index ].m_key = key;
 }
 
@@ -82,6 +84,7 @@ void InternalNode::set_key_at( std::size_t index, KeyType key )
 //
 Node* InternalNode::first_child() const
 {
+    assert( !m_mappings.empty() );
     return m_mappings.front().m_node;
 }
 
@@ -105,11 +108,9 @@ std::size_t InternalNode::insert_node_after( Node *old_node, KeyType new_key, No
 {
     // assert( is_sorted() );
 
-    auto iter = m_mappings.begin();
-    for( ; iter != m_mappings.end() && iter->m_node != old_node; ++iter )
-    {
-        ; // empty instruction!
-    }
+    const auto pred = [ old_node ]( const InternalElt& e ){ return e.m_node == old_node; };
+    const auto iter = std::find_if( m_mappings.begin(), m_mappings.end(), pred );
+    assert( iter != m_mappings.end() );
 
     m_mappings.insert( iter + 1, InternalElt( new_key, new_node ) );
 
