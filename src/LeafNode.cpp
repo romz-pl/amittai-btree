@@ -141,11 +141,10 @@ void LeafNode::move_half_to( LeafNode *recipient )
 void LeafNode::copy_half_from( const std::vector< std::pair< KeyType, Record* > > &mapp )
 {
     assert( is_sorted() );
+    m_mappings.reserve( m_mappings.size() + mapp.size() - min_size() );
+    const auto beg = mapp.begin() + min_size();
+    m_mappings.insert( m_mappings.end(), beg, mapp.end() );
 
-    for( std::size_t i = min_size(); i < mapp.size(); ++i )
-    {
-        m_mappings.push_back( mapp[ i ] );
-    }
     assert( is_sorted() );
 }
 
@@ -161,11 +160,6 @@ void LeafNode::move_all_to( LeafNode *recipient )
 void LeafNode::copy_all_from( const std::vector< std::pair< KeyType, Record* > > &mapp )
 {
     assert( is_sorted() );
-//    for( auto m : mapp )
-//    {
-//        m_mappings.push_back( m );
-//    }
-
     m_mappings.reserve( m_mappings.size() + mapp.size() );
     m_mappings.insert( m_mappings.end(), mapp.begin(), mapp.end() );
     assert( is_sorted() );
