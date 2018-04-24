@@ -4,6 +4,7 @@
 #include <tuple>
 #include "Definitions.hpp"
 #include "Record.hpp"
+#include "KeyType.h"
 
 class InternalNode;
 class LeafNode;
@@ -60,8 +61,8 @@ private:
     void coalesce( LeafNode* neighbor_node, LeafNode* node, InternalNode* parent, std::size_t index );
     void coalesce( InternalNode* neighbor_node, InternalNode* node, InternalNode* parent, std::size_t index );
 
-    void redistribute( LeafNode* neighbor_node, LeafNode* node, InternalNode* parent, std::size_t index );
-    void redistribute( InternalNode* neighbor_node, InternalNode* node, InternalNode* parent, std::size_t index );
+    void redistribute( LeafNode* neighbor_node, LeafNode* node, std::size_t index );
+    void redistribute( InternalNode* neighbor_node, InternalNode* node, std::size_t index );
 
     void adjust_root();
 

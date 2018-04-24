@@ -2,6 +2,7 @@
 #define ROMZ_AMITTAI_BTREE_IO_H
 
 #include <string>
+#include <tuple>
 #include "Printer.hpp"
 #include "BPlusTree.hpp"
 #include "LeafNode.hpp"
@@ -44,14 +45,17 @@ public:
 
 
 private:
+
+    using EntryType = std::tuple< KeyType, ValueType, LeafNode* >;
+
     std::vector< BPlusTree::EntryType > range( KeyType start, KeyType end );
     LeafNode* find_leaf_node( KeyType key, bool printing = false, bool verbose = false );
     void print_value( KeyType key, bool print_path, bool verbose );
 
 
-    void leaf_node_copy_range_starting_from( LeafNode* leaf, KeyType key, std::vector< LeafNode::EntryType >& vector );
-    void leaf_node_copy_range_until( LeafNode* leaf, KeyType key, std::vector< LeafNode::EntryType >& vector );
-    void leaf_node_copy_range( LeafNode* leaf, std::vector< LeafNode::EntryType >& vector );
+    void leaf_node_copy_range_starting_from( LeafNode* leaf, KeyType key, std::vector< EntryType >& vector );
+    void leaf_node_copy_range_until( LeafNode* leaf, KeyType key, std::vector< EntryType >& vector );
+    void leaf_node_copy_range( LeafNode* leaf, std::vector< EntryType >& vector );
 
 
 

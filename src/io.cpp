@@ -78,7 +78,7 @@ void Io::print_value( KeyType key, bool print_path, bool verbose )
 {
     LeafNode* leaf = find_leaf_node(key, print_path, verbose);
     if (!leaf) {
-        std::cout << "Leaf not found with key " << key << "." << std::endl;
+        std::cout << "Leaf not found with key " << key.to_int64() << "." << std::endl;
         return;
     }
     if (print_path) {
@@ -87,14 +87,14 @@ void Io::print_value( KeyType key, bool print_path, bool verbose )
     std::cout << "Leaf: " << Printer::to_string( leaf, verbose) << std::endl;
     Record* record = leaf->lookup(key);
     if (!record) {
-        std::cout << "Record not found with key " << key << "." << std::endl;
+        std::cout << "Record not found with key " << key.to_int64() << "." << std::endl;
         return;
     }
     if (print_path) {
         std::cout << "\t";
     }
     std::cout << "Record found at location " << std::hex << record << std::dec << ":" << std::endl;
-    std::cout << "\tKey: " << key << "   Value: " << record->value() << std::endl;
+    std::cout << "\tKey: " << key.to_int64() << "   Value: " << record->value() << std::endl;
 }
 
 void Io::print_path_to( KeyType key, bool verbose )
@@ -106,7 +106,7 @@ void Io::print_range( KeyType start, KeyType end )
 {
     auto rangeVector = range(start, end);
     for (auto entry : rangeVector) {
-        std::cout << "Key: " << std::get<0>(entry);
+        std::cout << "Key: " << std::get<0>(entry).to_int64();
         std::cout << "    Value: " << std::get<1>(entry);
         std::cout << "    Leaf: " << std::hex << std::get<2>(entry) << std::dec << std::endl;
     }
@@ -131,36 +131,36 @@ std::vector< BPlusTree::EntryType > Io::range( KeyType start, KeyType end )
     return entries;
 }
 
-void Io::leaf_node_copy_range_starting_from( LeafNode* leaf, KeyType key, std::vector< LeafNode::EntryType >& vector )
+void Io::leaf_node_copy_range_starting_from( LeafNode* leaf, KeyType key, std::vector< EntryType >& vector )
 {
     bool found = false;
-    for (auto mapping : leaf->m_mappings) {
-        if (mapping.first == key) {
+    for (auto mapping : leaf->m_elt) {
+        if (mapping.m_key == key) {
             found = true;
         }
         if (found) {
-            vector.push_back(std::make_tuple(mapping.first, mapping.second->value(), leaf));
+            vector.push_back(std::make_tuple(mapping.m_key, mapping.m_record->value(), leaf));
         }
     }
 }
 
-void Io::leaf_node_copy_range_until( LeafNode* leaf, KeyType key, std::vector< LeafNode::EntryType >& vector )
+void Io::leaf_node_copy_range_until( LeafNode* leaf, KeyType key, std::vector< EntryType >& vector )
 {
     bool found = false;
-    for (auto mapping : leaf->m_mappings) {
+    for (auto mapping : leaf->m_elt) {
         if (!found) {
-            vector.push_back(std::make_tuple(mapping.first, mapping.second->value(), leaf));
+            vector.push_back(std::make_tuple(mapping.m_key, mapping.m_record->value(), leaf));
         }
-        if (mapping.first == key) {
+        if (mapping.m_key == key) {
             found = true;
         }
     }
 }
 
-void Io::leaf_node_copy_range( LeafNode* leaf, std::vector< LeafNode::EntryType >& vector )
+void Io::leaf_node_copy_range( LeafNode* leaf, std::vector< EntryType >& vector )
 {
-    for (auto mapping : leaf->m_mappings) {
-        vector.push_back(std::make_tuple(mapping.first, mapping.second->value(), leaf));
+    for (auto mapping : leaf->m_elt) {
+        vector.push_back(std::make_tuple(mapping.m_key, mapping.m_record->value(), leaf));
     }
 }
 

@@ -5,6 +5,8 @@
 #include <vector>
 #include "Definitions.hpp"
 #include "Node.hpp"
+#include "KeyType.h"
+#include "InternalElt.h"
 
 class InternalNode : public Node
 {
@@ -15,8 +17,6 @@ public:
     InternalNode( std::size_t order, InternalNode* parent );
     ~InternalNode();
 
-    using MappingType = std::pair< KeyType, Node* >;
-
     bool is_leaf() const override;
     std::size_t size() const override;
     std::size_t min_size() const override;
@@ -25,9 +25,12 @@ public:
 
     KeyType key_at( std::size_t index ) const;
     void set_key_at( std::size_t index, KeyType key );
+
     Node* first_child() const;
+
     void populate_new_root( Node* old_node, KeyType new_key, Node* new_node );
     std::size_t insert_node_after( Node* old_node, KeyType new_key, Node* new_node );
+
     void remove( std::size_t index );
     Node* remove_and_return_only_child();
     KeyType replace_and_return_first_key();
@@ -43,15 +46,20 @@ public:
     std::size_t node_index( Node* node ) const;
     Node* neighbor( std::size_t index ) const;
 
+    InternalNode* internal() override;
+    const InternalNode* internal() const override;
+
 
 private:
-    void copy_half_from( std::vector< MappingType >& mappings );
-    void copy_all_from( std::vector< MappingType >& mappings );
-    void copy_last_from( MappingType pair );
-    void copy_first_from( MappingType pair, std::size_t parent_index );
+    void copy_half_from( const std::vector< InternalElt >& ve );
+    void copy_all_from( const std::vector< InternalElt >& ve );
+    void copy_last_from( const InternalElt& pair );
+    void copy_first_from( const InternalElt& pair, std::size_t parent_index );
+
+    bool is_sorted() const;
 
 private:
-    std::vector< MappingType > m_mappings;
+    std::vector< InternalElt > m_elt;
 
     // Key used where only the entry's pointer has meaning.
     const KeyType DUMMY_KEY{-1};

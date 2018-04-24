@@ -1,7 +1,13 @@
 #include <stdexcept>
+#include <algorithm>
+#include <cassert>
 #include "LeafNode.hpp"
 #include "InternalNode.hpp"
 
+
+//
+//
+//
 LeafNode::LeafNode( std::size_t order, InternalNode* parent )
     : Node( order, parent )
     , m_next{ nullptr }
@@ -9,24 +15,36 @@ LeafNode::LeafNode( std::size_t order, InternalNode* parent )
 
 }
 
+//
+//
+//
 LeafNode::~LeafNode()
 {
-    for( auto mapping : m_mappings )
+    for( auto m : m_elt )
     {
-        delete mapping.second;
+        delete m.m_record;
     }
 }
 
+//
+//
+//
 bool LeafNode::is_leaf() const
 {
     return true;
 }
 
+//
+//
+//
 std::size_t LeafNode::size() const
 {
-    return static_cast<std::size_t>(m_mappings.size());
+    return m_elt.size();
 }
 
+//
+//
+//
 std::size_t LeafNode::min_size() const
 {
     return order() / 2;
@@ -37,121 +55,231 @@ std::size_t LeafNode::max_size() const
     return order() - 1;
 }
 
-
+//
+//
+//
 LeafNode* LeafNode::next() const
 {
     return m_next;
 }
 
+//
+//
+//
 void LeafNode::set_next( LeafNode* next )
 {
     m_next = next;
 }
 
-
+//
+//
+//
 std::size_t LeafNode::create_and_insert_record( KeyType key, ValueType value )
 {
-    Record* existingRecord = lookup(key);
-    if (!existingRecord) {
-        Record* newRecord = new Record(value);
-        insert(key, newRecord);
+    assert( is_sorted() );
+
+    Record* existing_record = lookup( key );
+    if( !existing_record )
+    {
+        Record* new_record = new Record( value );
+        insert( key, new_record );
     }
-    return static_cast< std::size_t >( m_mappings.size() );
+    assert( is_sorted() );
+    return m_elt.size();
 }
 
+//
+//
+//
 void LeafNode::insert( KeyType key, Record* record )
 {
-    auto insertionPoint = m_mappings.begin();
-    auto end = m_mappings.end();
-    while (insertionPoint != end && insertionPoint->first < key) {
-        ++insertionPoint;
-    }
-    m_mappings.insert(insertionPoint, MappingType(key, record));
+    assert( is_sorted() );
+
+    const auto pred = [ key ]( const LeafElt& m ){ return m.m_key >= key; };
+    const auto insertion_point = std::find_if( m_elt.begin(), m_elt.end(), pred );
+    m_elt.insert( insertion_point, LeafElt( key, record ) );
+
+    assert( is_sorted() );
 }
 
+//
+//
+//
 Record* LeafNode::lookup( KeyType key ) const
 {
-    for (auto mapping : m_mappings) {
-        if (mapping.first == key) {
-            return mapping.second;
-        }
+    const auto pred = [ key ]( const LeafElt& m ){ return m.m_key == key; };
+    const auto it = std::find_if( m_elt.begin(), m_elt.end(), pred );
+
+    if( it != m_elt.end() )
+    {
+        return it->m_record;
     }
+
     return nullptr;
 }
 
-
-
-std::size_t LeafNode::remove_and_delete_record (KeyType key )
+//
+//
+//
+std::size_t LeafNode::remove_and_delete_record( KeyType key )
 {
-    auto removalPoint = m_mappings.begin();
-    auto end = m_mappings.end();
-    while (removalPoint != end && removalPoint->first != key) {
-        ++removalPoint;
+    assert( is_sorted() );
+
+    const auto pred = [ key ]( const LeafElt& m ){ return m.m_key == key; };
+    const auto removal_point = std::find_if( m_elt.begin(), m_elt.end(), pred );
+
+    if( removal_point == m_elt.end() )
+    {
+        throw std::runtime_error( "Key Not Found" );
     }
-    if (removalPoint == end) {
-        throw std::runtime_error( "Record Not Found" );
-    }
-    auto record = *removalPoint;
-    m_mappings.erase(removalPoint);
-    delete record.second;
-    return static_cast< std::size_t >( m_mappings.size() );
+
+    delete removal_point->m_record;
+    m_elt.erase( removal_point );
+
+    assert( is_sorted() );
+
+    return m_elt.size();
 }
 
+//
+//
+//
 KeyType LeafNode::first_key() const
 {
-    return m_mappings[0].first;
+    assert( !m_elt.empty() );
+    return m_elt[ 0 ].m_key;
 }
 
+//
+//
+//
 void LeafNode::move_half_to( LeafNode *recipient )
 {
-    recipient->copy_half_from(m_mappings);
-    size_t size = m_mappings.size();
-    for (size_t i = min_size(); i < size; ++i) {
-        m_mappings.pop_back();
-    }
+    assert( is_sorted() );
+
+    recipient->copy_half_from( m_elt );
+    const auto beg = m_elt.begin() + min_size();
+    m_elt.erase( beg, m_elt.end() );
+
+    assert( is_sorted() );
 }
 
-void LeafNode::copy_half_from( std::vector< std::pair< KeyType, Record* > > &aMappings )
+//
+//
+//
+void LeafNode::copy_half_from(const std::vector< LeafElt > &ve )
 {
-    for (size_t i = min_size(); i < aMappings.size(); ++i) {
-        m_mappings.push_back(aMappings[i]);
-    }
+    assert( is_sorted() );
+
+    m_elt.reserve( m_elt.size() + ve.size() - min_size() );
+    const auto beg = ve.begin() + min_size();
+    m_elt.insert( m_elt.end(), beg, ve.end() );
+
+    assert( is_sorted() );
 }
 
-void LeafNode::move_all_to( LeafNode *recipient, std::size_t )
+//
+//
+//
+void LeafNode::move_all_to( LeafNode *recipient )
 {
-    recipient->copy_all_from(m_mappings);
-    m_mappings.clear();
-    recipient->set_next(next());
+    assert( is_sorted() );
+
+    recipient->copy_all_from( m_elt );
+    m_elt.clear();
+    recipient->set_next( next() );
+
+    assert( is_sorted() );
 }
 
-void LeafNode::copy_all_from( std::vector< std::pair< KeyType, Record* > > &aMappings )
+//
+//
+//
+void LeafNode::copy_all_from(const std::vector< LeafElt > &ve )
 {
-    for (auto mapping : aMappings) {
-        m_mappings.push_back(mapping);
-    }
+    assert( is_sorted() );
+
+    m_elt.reserve( m_elt.size() + ve.size() );
+    m_elt.insert( m_elt.end(), ve.begin(), ve.end() );
+
+    assert( is_sorted() );
 }
 
+//
+//
+//
 void LeafNode::move_first_to_end_of( LeafNode* recipient )
 {
-    recipient->copy_last_from(m_mappings.front());
-    m_mappings.erase(m_mappings.begin());
-    parent()->set_key_at(1, m_mappings.front().first);
+    assert( is_sorted() );
+
+    recipient->copy_last_from( m_elt.front() );
+    m_elt.erase( m_elt.begin() );
+    parent()->set_key_at( 1, m_elt.front().m_key );
+
+    assert( is_sorted() );
 }
 
-void LeafNode::copy_last_from( MappingType pair )
+//
+//
+//
+void LeafNode::copy_last_from( const LeafElt& pair )
 {
-    m_mappings.push_back(pair);
+    assert( is_sorted() );
+
+    m_elt.push_back( pair );
+
+    assert( is_sorted() );
 }
 
+//
+//
+//
 void LeafNode::move_last_to_front_of( LeafNode *recipient, std::size_t parent_index )
 {
-    recipient->copy_first_from(m_mappings.back(), parent_index);
-    m_mappings.pop_back();
+    assert( is_sorted() );
+
+    recipient->copy_first_from( m_elt.back(), parent_index );
+    m_elt.pop_back();
+
+    assert( is_sorted() );
 }
 
-void LeafNode::copy_first_from( MappingType aPair, std::size_t parent_index )
+//
+//
+//
+void LeafNode::copy_first_from( const LeafElt& pair, std::size_t parent_index )
 {
-    m_mappings.insert(m_mappings.begin(), aPair);
-    parent()->set_key_at(parent_index, m_mappings.front().first);
+    assert( is_sorted() );
+
+    m_elt.insert( m_elt.begin(), pair );
+    parent()->set_key_at( parent_index, m_elt.front().m_key );
+
+    assert( is_sorted() );
 }
+
+//
+//
+//
+bool LeafNode::is_sorted() const
+{
+    const auto pred = []( const LeafElt& ma, const LeafElt& mb ){ return ma.m_key < mb.m_key ; };
+
+    return std::is_sorted( m_elt.begin(), m_elt.end(), pred );
+}
+
+//
+//
+//
+LeafNode* LeafNode::leaf()
+{
+    return this;
+}
+
+//
+//
+//
+const LeafNode* LeafNode::leaf() const
+{
+    return this;
+}
+
