@@ -22,7 +22,7 @@ LeafNode::~LeafNode()
 {
     for( auto m : m_mappings )
     {
-        delete m.second;
+        delete m.m_record;
     }
 }
 
@@ -95,9 +95,9 @@ void LeafNode::insert( KeyType key, Record* record )
 {
     assert( is_sorted() );
 
-    const auto pred = [ key ]( const MappingType& m ){ return m.first >= key; };
+    const auto pred = [ key ]( const LeafElt& m ){ return m.m_key >= key; };
     const auto insertion_point = std::find_if( m_mappings.begin(), m_mappings.end(), pred );
-    m_mappings.insert( insertion_point, MappingType( key, record ) );
+    m_mappings.insert( insertion_point, LeafElt( key, record ) );
 
     assert( is_sorted() );
 }
@@ -107,12 +107,12 @@ void LeafNode::insert( KeyType key, Record* record )
 //
 Record* LeafNode::lookup( KeyType key ) const
 {
-    const auto pred = [ key ]( const MappingType& m ){ return m.first == key; };
+    const auto pred = [ key ]( const LeafElt& m ){ return m.m_key == key; };
     const auto it = std::find_if( m_mappings.begin(), m_mappings.end(), pred );
 
     if( it != m_mappings.end() )
     {
-        return it->second;
+        return it->m_record;
     }
 
     return nullptr;
@@ -125,7 +125,7 @@ std::size_t LeafNode::remove_and_delete_record( KeyType key )
 {
     assert( is_sorted() );
 
-    const auto pred = [ key ]( const MappingType& m ){ return m.first == key; };
+    const auto pred = [ key ]( const LeafElt& m ){ return m.m_key == key; };
     const auto removal_point = std::find_if( m_mappings.begin(), m_mappings.end(), pred );
 
     if( removal_point == m_mappings.end() )
@@ -133,7 +133,7 @@ std::size_t LeafNode::remove_and_delete_record( KeyType key )
         throw std::runtime_error( "Key Not Found" );
     }
 
-    delete removal_point->second;
+    delete removal_point->m_record;
     m_mappings.erase( removal_point );
 
     assert( is_sorted() );
@@ -147,7 +147,7 @@ std::size_t LeafNode::remove_and_delete_record( KeyType key )
 KeyType LeafNode::first_key() const
 {
     assert( !m_mappings.empty() );
-    return m_mappings[ 0 ].first;
+    return m_mappings[ 0 ].m_key;
 }
 
 //
@@ -167,7 +167,7 @@ void LeafNode::move_half_to( LeafNode *recipient )
 //
 //
 //
-void LeafNode::copy_half_from( const std::vector< std::pair< KeyType, Record* > > &mapp )
+void LeafNode::copy_half_from( const std::vector< LeafElt > &mapp )
 {
     assert( is_sorted() );
 
@@ -195,7 +195,7 @@ void LeafNode::move_all_to( LeafNode *recipient )
 //
 //
 //
-void LeafNode::copy_all_from( const std::vector< std::pair< KeyType, Record* > > &mapp )
+void LeafNode::copy_all_from( const std::vector< LeafElt > &mapp )
 {
     assert( is_sorted() );
 
@@ -214,7 +214,7 @@ void LeafNode::move_first_to_end_of( LeafNode* recipient )
 
     recipient->copy_last_from( m_mappings.front() );
     m_mappings.erase( m_mappings.begin() );
-    parent()->set_key_at( 1, m_mappings.front().first );
+    parent()->set_key_at( 1, m_mappings.front().m_key );
 
     assert( is_sorted() );
 }
@@ -222,7 +222,7 @@ void LeafNode::move_first_to_end_of( LeafNode* recipient )
 //
 //
 //
-void LeafNode::copy_last_from( const MappingType& pair )
+void LeafNode::copy_last_from( const LeafElt& pair )
 {
     assert( is_sorted() );
 
@@ -247,12 +247,12 @@ void LeafNode::move_last_to_front_of( LeafNode *recipient, std::size_t parent_in
 //
 //
 //
-void LeafNode::copy_first_from( const MappingType& pair, std::size_t parent_index )
+void LeafNode::copy_first_from( const LeafElt& pair, std::size_t parent_index )
 {
     assert( is_sorted() );
 
     m_mappings.insert( m_mappings.begin(), pair );
-    parent()->set_key_at( parent_index, m_mappings.front().first );
+    parent()->set_key_at( parent_index, m_mappings.front().m_key );
 
     assert( is_sorted() );
 }
@@ -262,7 +262,7 @@ void LeafNode::copy_first_from( const MappingType& pair, std::size_t parent_inde
 //
 bool LeafNode::is_sorted() const
 {
-    const auto pred = []( const MappingType& ma, const MappingType& mb ){ return ma.first < mb.first ; };
+    const auto pred = []( const LeafElt& ma, const LeafElt& mb ){ return ma.m_key < mb.m_key ; };
 
     return std::is_sorted( m_mappings.begin(), m_mappings.end(), pred );
 }

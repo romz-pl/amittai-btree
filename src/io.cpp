@@ -135,11 +135,11 @@ void Io::leaf_node_copy_range_starting_from( LeafNode* leaf, KeyType key, std::v
 {
     bool found = false;
     for (auto mapping : leaf->m_mappings) {
-        if (mapping.first == key) {
+        if (mapping.m_key == key) {
             found = true;
         }
         if (found) {
-            vector.push_back(std::make_tuple(mapping.first, mapping.second->value(), leaf));
+            vector.push_back(std::make_tuple(mapping.m_key, mapping.m_record->value(), leaf));
         }
     }
 }
@@ -149,9 +149,9 @@ void Io::leaf_node_copy_range_until( LeafNode* leaf, KeyType key, std::vector< L
     bool found = false;
     for (auto mapping : leaf->m_mappings) {
         if (!found) {
-            vector.push_back(std::make_tuple(mapping.first, mapping.second->value(), leaf));
+            vector.push_back(std::make_tuple(mapping.m_key, mapping.m_record->value(), leaf));
         }
-        if (mapping.first == key) {
+        if (mapping.m_key == key) {
             found = true;
         }
     }
@@ -160,7 +160,7 @@ void Io::leaf_node_copy_range_until( LeafNode* leaf, KeyType key, std::vector< L
 void Io::leaf_node_copy_range( LeafNode* leaf, std::vector< LeafNode::EntryType >& vector )
 {
     for (auto mapping : leaf->m_mappings) {
-        vector.push_back(std::make_tuple(mapping.first, mapping.second->value(), leaf));
+        vector.push_back(std::make_tuple(mapping.m_key, mapping.m_record->value(), leaf));
     }
 }
 

@@ -6,6 +6,7 @@ add_library( ${LIB_NAME} STATIC
     InternalNode.cpp 
     KeyType.cpp
     io.cpp
+    LeafElt.cpp
     LeafNode.cpp 
     Node.cpp 
     Printer.cpp 

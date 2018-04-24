@@ -7,6 +7,7 @@
 #include "Node.hpp"
 #include "Record.hpp"
 #include "KeyType.h"
+#include "LeafElt.h"
 
 class LeafNode : public Node
 {
@@ -16,7 +17,6 @@ public:
     LeafNode( std::size_t order, InternalNode* parent );
     ~LeafNode();
 
-    using MappingType = std::pair< KeyType, Record* >;
     using EntryType = std::tuple< KeyType, ValueType, LeafNode* >;
 
     bool is_leaf() const override;
@@ -42,15 +42,15 @@ public:
 
 
 private:
-    void copy_half_from( const std::vector< MappingType >& mapp );
-    void copy_all_from( const std::vector< MappingType >& mapp );
-    void copy_last_from( const MappingType &pair );
-    void copy_first_from( const MappingType &pair, std::size_t parent_index );
+    void copy_half_from( const std::vector< LeafElt >& mapp );
+    void copy_all_from( const std::vector< LeafElt >& mapp );
+    void copy_last_from( const LeafElt &pair );
+    void copy_first_from( const LeafElt &pair, std::size_t parent_index );
 
     bool is_sorted() const;
 
 private:
-    std::vector< MappingType > m_mappings;
+    std::vector< LeafElt > m_mappings;
 
     LeafNode* m_next;
 };
