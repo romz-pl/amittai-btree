@@ -146,6 +146,7 @@ std::size_t LeafNode::remove_and_delete_record( KeyType key )
 //
 KeyType LeafNode::first_key() const
 {
+    assert( !m_mappings.empty() );
     return m_mappings[ 0 ].first;
 }
 
