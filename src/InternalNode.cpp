@@ -121,13 +121,13 @@ void InternalNode::move_half_to( InternalNode *recipient )
     // assert( is_sorted() );
 }
 
-void InternalNode::copy_half_from( std::vector< InternalElt > &mappings )
+void InternalNode::copy_half_from( const std::vector< InternalElt >& mapp )
 {
     // assert( is_sorted() );
-    for( std::size_t i = min_size(); i < mappings.size(); ++i )
+    for( std::size_t i = min_size(); i < mapp.size(); ++i )
     {
-        mappings[ i ].m_node->set_parent( this );
-        m_mappings.push_back( mappings[ i ] );
+        mapp[ i ].m_node->set_parent( this );
+        m_mappings.push_back( mapp[ i ] );
     }
     // assert( is_sorted() );
 }
@@ -141,10 +141,10 @@ void InternalNode::move_all_to( InternalNode *recipient, std::size_t index_in_pa
     // assert( is_sorted() );
 }
 
-void InternalNode::copy_all_from( std::vector< InternalElt > &mappings )
+void InternalNode::copy_all_from( const std::vector< InternalElt > &mapp )
 {
     // assert( is_sorted() );
-    for( auto m : mappings )
+    for( auto m : mapp )
     {
         m.m_node->set_parent( this );
         m_mappings.push_back( m );
@@ -161,7 +161,7 @@ void InternalNode::move_first_to_end_of( InternalNode *recipient )
     // assert( is_sorted() );
 }
 
-void InternalNode::copy_last_from( InternalElt pair )
+void InternalNode::copy_last_from( const InternalElt& pair )
 {
     // assert( is_sorted() );
     m_mappings.push_back( pair );
@@ -177,7 +177,7 @@ void InternalNode::move_last_to_front_of( InternalNode *recipient, std::size_t p
     // assert( is_sorted() );
 }
 
-void InternalNode::copy_first_from( InternalElt pair, std::size_t parent_index )
+void InternalNode::copy_first_from( const InternalElt& pair, std::size_t parent_index )
 {
     // assert( is_sorted() );
     m_mappings.front().m_key = parent()->key_at( parent_index );

@@ -45,10 +45,10 @@ public:
 
 
 private:
-    void copy_half_from( std::vector< InternalElt >& mappings );
-    void copy_all_from( std::vector< InternalElt >& mappings );
-    void copy_last_from( InternalElt pair );
-    void copy_first_from( InternalElt pair, std::size_t parent_index );
+    void copy_half_from( const std::vector< InternalElt >& mapp );
+    void copy_all_from( const std::vector< InternalElt > &mapp );
+    void copy_last_from( const InternalElt& pair );
+    void copy_first_from( const InternalElt& pair, std::size_t parent_index );
 
     bool is_sorted() const;
 
