@@ -4,7 +4,7 @@
 
 #include <cstdint>
 
-using KeyType = std::int64_t;
+
 using ValueType = std::int64_t;
 
 #endif

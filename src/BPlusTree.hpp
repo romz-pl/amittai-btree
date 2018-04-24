@@ -4,6 +4,7 @@
 #include <tuple>
 #include "Definitions.hpp"
 #include "Record.hpp"
+#include "KeyType.h"
 
 class InternalNode;
 class LeafNode;

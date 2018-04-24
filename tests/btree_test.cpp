@@ -86,14 +86,14 @@ TEST( btree, reverse_erase )
 
     for( std::size_t i = 0; i < item_no; i++ )
     {
-        ASSERT_NO_THROW( tree.insert( i, KeyType( i ) ) );
+        ASSERT_NO_THROW( tree.insert( KeyType( i ), i ) );
     }
 
     for( std::size_t i = 0; i < item_no; i++ )
     {
         Record* rec = tree.search( i );
         ASSERT_TRUE( rec );
-        ASSERT_TRUE( rec->value() == KeyType( i ) );
+        ASSERT_TRUE( rec->value() == ValueType( i ) );
     }
 
     for( std::size_t i = 0; i < item_no; i++ )

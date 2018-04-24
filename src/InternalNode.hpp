@@ -5,6 +5,7 @@
 #include <vector>
 #include "Definitions.hpp"
 #include "Node.hpp"
+#include "KeyType.h"
 
 class InternalNode : public Node
 {

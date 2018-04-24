@@ -117,7 +117,7 @@ std::string Printer::to_string( const LeafNode* leaf, bool verbose )
         } else {
             keyToTextConverter << " ";
         }
-        keyToTextConverter << mapping.first;
+        keyToTextConverter << mapping.first.to_int64();
     }
     if (verbose) {
         keyToTextConverter << "[" << std::hex << leaf->m_next << ">";
@@ -143,7 +143,7 @@ std::string Printer::to_string( const InternalNode* internal, bool verbose )
         } else {
             keyToTextConverter << " ";
         }
-        keyToTextConverter << std::dec << entry->first;
+        keyToTextConverter << std::dec << entry->first.to_int64();
         if (verbose) {
             keyToTextConverter << "(" << std::hex << entry->second << std::dec << ")";
         }

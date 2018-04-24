@@ -78,7 +78,7 @@ void Io::print_value( KeyType key, bool print_path, bool verbose )
 {
     LeafNode* leaf = find_leaf_node(key, print_path, verbose);
     if (!leaf) {
-        std::cout << "Leaf not found with key " << key << "." << std::endl;
+        std::cout << "Leaf not found with key " << key.to_int64() << "." << std::endl;
         return;
     }
     if (print_path) {
@@ -87,14 +87,14 @@ void Io::print_value( KeyType key, bool print_path, bool verbose )
     std::cout << "Leaf: " << Printer::to_string( leaf, verbose) << std::endl;
     Record* record = leaf->lookup(key);
     if (!record) {
-        std::cout << "Record not found with key " << key << "." << std::endl;
+        std::cout << "Record not found with key " << key.to_int64() << "." << std::endl;
         return;
     }
     if (print_path) {
         std::cout << "\t";
     }
     std::cout << "Record found at location " << std::hex << record << std::dec << ":" << std::endl;
-    std::cout << "\tKey: " << key << "   Value: " << record->value() << std::endl;
+    std::cout << "\tKey: " << key.to_int64() << "   Value: " << record->value() << std::endl;
 }
 
 void Io::print_path_to( KeyType key, bool verbose )
@@ -106,7 +106,7 @@ void Io::print_range( KeyType start, KeyType end )
 {
     auto rangeVector = range(start, end);
     for (auto entry : rangeVector) {
-        std::cout << "Key: " << std::get<0>(entry);
+        std::cout << "Key: " << std::get<0>(entry).to_int64();
         std::cout << "    Value: " << std::get<1>(entry);
         std::cout << "    Leaf: " << std::hex << std::get<2>(entry) << std::dec << std::endl;
     }

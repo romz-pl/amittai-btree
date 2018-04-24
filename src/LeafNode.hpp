@@ -6,6 +6,7 @@
 #include <vector>
 #include "Node.hpp"
 #include "Record.hpp"
+#include "KeyType.h"
 
 class LeafNode : public Node
 {
