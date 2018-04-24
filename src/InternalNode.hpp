@@ -6,6 +6,7 @@
 #include "Definitions.hpp"
 #include "Node.hpp"
 #include "KeyType.h"
+#include "InternalElt.h"
 
 class InternalNode : public Node
 {
@@ -15,8 +16,6 @@ class InternalNode : public Node
 public:
     InternalNode( std::size_t order, InternalNode* parent );
     ~InternalNode();
-
-    using MappingType = std::pair< KeyType, Node* >;
 
     bool is_leaf() const override;
     std::size_t size() const override;
@@ -46,15 +45,15 @@ public:
 
 
 private:
-    void copy_half_from( std::vector< MappingType >& mappings );
-    void copy_all_from( std::vector< MappingType >& mappings );
-    void copy_last_from( MappingType pair );
-    void copy_first_from( MappingType pair, std::size_t parent_index );
+    void copy_half_from( std::vector< InternalElt >& mappings );
+    void copy_all_from( std::vector< InternalElt >& mappings );
+    void copy_last_from( InternalElt pair );
+    void copy_first_from( InternalElt pair, std::size_t parent_index );
 
     bool is_sorted() const;
 
 private:
-    std::vector< MappingType > m_mappings;
+    std::vector< InternalElt > m_mappings;
 
     // Key used where only the entry's pointer has meaning.
     const KeyType DUMMY_KEY{-1};

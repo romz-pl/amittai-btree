@@ -2,7 +2,8 @@
 set( LIB_NAME amittai-btree )
 
 add_library( ${LIB_NAME} STATIC
-    BPlusTree.cpp 
+    BPlusTree.cpp
+    InternalElt.cpp 
     InternalNode.cpp 
     KeyType.cpp
     io.cpp

@@ -90,7 +90,7 @@ void Printer::internal_node_queue_up_children( InternalNode* internal, std::queu
 {
     for (auto mapping : internal->m_mappings)
     {
-        queue->push(mapping.second);
+        queue->push(mapping.m_node);
     }
 }
 
@@ -143,9 +143,9 @@ std::string Printer::to_string( const InternalNode* internal, bool verbose )
         } else {
             keyToTextConverter << " ";
         }
-        keyToTextConverter << std::dec << entry->first.to_int64();
+        keyToTextConverter << std::dec << entry->m_key.to_int64();
         if (verbose) {
-            keyToTextConverter << "(" << std::hex << entry->second << std::dec << ")";
+            keyToTextConverter << "(" << std::hex << entry->m_node << std::dec << ")";
         }
         ++entry;
     }
