@@ -35,11 +35,11 @@ void BPlusTree::destroy_tree()
 
     if( m_root->is_leaf() )
     {
-        delete static_cast< LeafNode* >( m_root );
+        delete m_root->leaf();
     }
     else
     {
-        delete static_cast< InternalNode* >( m_root );
+        delete m_root->internal();
     }
     m_root = nullptr;
 }
@@ -126,7 +126,7 @@ void BPlusTree::insert_into_parent(  Node *old_node, KeyType key, Node *new_node
     if (parent == nullptr)
     {
         m_root = new InternalNode( m_order, nullptr );
-        parent = static_cast< InternalNode* >( m_root );
+        parent = m_root->internal();
         old_node->set_parent( parent );
         new_node->set_parent( parent );
         parent->populate_new_root( old_node, key, new_node );
@@ -218,7 +218,7 @@ void BPlusTree::coalesce_or_redistribute( LeafNode* node )
     InternalNode* parent = node->parent();
     const std::size_t index_of_node_in_parent = parent->node_index( node );
     const std::size_t neighbor_index = ( index_of_node_in_parent == 0 ) ? 1 : index_of_node_in_parent - 1;
-    LeafNode* neighbor_node = static_cast< LeafNode* >( parent->neighbor( neighbor_index ) );
+    LeafNode* neighbor_node = parent->neighbor( neighbor_index )->leaf();
 
     if( node->size() + neighbor_node->size() <= neighbor_node->max_size() )
     {
@@ -244,7 +244,7 @@ void BPlusTree::coalesce_or_redistribute( InternalNode* node )
     InternalNode* parent = node->parent();
     const std::size_t index_of_node_in_parent = parent->node_index( node );
     const std::size_t neighbor_index = ( index_of_node_in_parent == 0 ) ? 1 : index_of_node_in_parent - 1;
-    InternalNode* neighbor_node = static_cast< InternalNode* >( parent->neighbor( neighbor_index ) );
+    InternalNode* neighbor_node = parent->neighbor( neighbor_index )->internal();
 
     if( node->size() + neighbor_node->size() <= neighbor_node->max_size() )
     {
@@ -335,8 +335,8 @@ void BPlusTree::adjust_root()
 {
     if( !m_root->is_leaf() && m_root->size() == 1 )
     {
-        auto discarded_node = static_cast< InternalNode* >( m_root );
-        m_root = static_cast< InternalNode* >( m_root )->remove_and_return_only_child();
+        auto discarded_node = m_root->internal();
+        m_root = m_root->internal()->remove_and_return_only_child();
         m_root->set_parent( nullptr );
         delete discarded_node;
     }
@@ -360,9 +360,9 @@ LeafNode* BPlusTree::find_leaf_node( KeyType key )
 
     while( !node->is_leaf() )
     {
-        auto internalNode = static_cast< InternalNode* >( node );
+        auto internalNode = node->internal();
         node = internalNode->lookup( key );
     }
-    return static_cast< LeafNode* >( node );
+    return node->leaf();
 }
 

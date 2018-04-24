@@ -266,3 +266,20 @@ bool LeafNode::is_sorted() const
 
     return std::is_sorted( m_mappings.begin(), m_mappings.end(), pred );
 }
+
+//
+//
+//
+LeafNode* LeafNode::leaf()
+{
+    return this;
+}
+
+//
+//
+//
+const LeafNode* LeafNode::leaf() const
+{
+    return this;
+}
+

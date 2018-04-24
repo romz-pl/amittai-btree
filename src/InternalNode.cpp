@@ -346,4 +346,20 @@ bool InternalNode::is_sorted() const
     return std::is_sorted( m_mappings.begin(), m_mappings.end(), pred );
 }
 
+//
+//
+//
+InternalNode* InternalNode::internal()
+{
+    return this;
+}
+
+//
+//
+//
+const InternalNode* InternalNode::internal() const
+{
+    return this;
+}
+
 

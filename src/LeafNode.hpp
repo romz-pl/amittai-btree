@@ -35,6 +35,9 @@ public:
     void move_first_to_end_of( LeafNode* recipient );
     void move_last_to_front_of( LeafNode* recipient, std::size_t parent_index );
 
+    LeafNode* leaf() override;
+    const LeafNode* leaf() const override;
+
 private:
     void copy_half_from( const std::vector< LeafElt >& mapp );
     void copy_all_from( const std::vector< LeafElt >& mapp );

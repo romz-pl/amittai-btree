@@ -46,6 +46,9 @@ public:
     std::size_t node_index( Node* node ) const;
     Node* neighbor( std::size_t index ) const;
 
+    InternalNode* internal() override;
+    const InternalNode* internal() const override;
+
 
 private:
     void copy_half_from( const std::vector< InternalElt >& mapp );
