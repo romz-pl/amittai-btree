@@ -69,12 +69,8 @@ void LeafNode::insert( KeyType key, Record* record )
 {
     assert( is_sorted() );
 
-    auto insertion_point = m_mappings.begin();
-    auto end = m_mappings.end();
-    while( insertion_point != end && insertion_point->first < key )
-    {
-        ++insertion_point;
-    }
+    const auto pred = [ key ]( const MappingType& m ){ return m.first >= key; };
+    const auto insertion_point = std::find_if( m_mappings.begin(), m_mappings.end(), pred );
     m_mappings.insert( insertion_point, MappingType( key, record ) );
 
     assert( is_sorted() );
@@ -99,23 +95,19 @@ std::size_t LeafNode::remove_and_delete_record( KeyType key )
 {
     assert( is_sorted() );
 
-    auto removal_point = m_mappings.begin();
-    auto end = m_mappings.end();
-    while( removal_point != end && removal_point->first != key )
+    const auto pred = [ key ]( const MappingType& m ){ return m.first == key; };
+    const auto removal_point = std::find_if( m_mappings.begin(), m_mappings.end(), pred );
+
+    if( removal_point == m_mappings.end() )
     {
-        ++removal_point;
+        throw std::runtime_error( "Key Not Found" );
     }
 
-    if( removal_point == end )
-    {
-        throw std::runtime_error( "Record Not Found" );
-    }
-
-    auto record = *removal_point;
+    delete removal_point->second;
     m_mappings.erase( removal_point );
+
     assert( is_sorted() );
 
-    delete record.second;
     return m_mappings.size();
 }
 
