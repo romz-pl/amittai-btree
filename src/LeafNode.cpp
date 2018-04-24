@@ -151,9 +151,11 @@ void LeafNode::copy_half_from( std::vector< std::pair< KeyType, Record* > > &map
 
 void LeafNode::move_all_to( LeafNode *recipient )
 {
+    assert( is_sorted() );
     recipient->copy_all_from( m_mappings );
     m_mappings.clear();
     recipient->set_next( next() );
+    assert( is_sorted() );
 }
 
 void LeafNode::copy_all_from( std::vector< std::pair< KeyType, Record* > > &mappings )
