@@ -33,7 +33,7 @@ public:
 
 
     void move_half_to( LeafNode* recipient );
-    void move_all_to( LeafNode* recipient, std::size_t /* Unused */ );
+    void move_all_to( LeafNode* recipient );
     void move_first_to_end_of( LeafNode* recipient );
     void move_last_to_front_of( LeafNode* recipient, std::size_t parent_index );
 

@@ -51,28 +51,32 @@ void LeafNode::set_next( LeafNode* next )
 
 std::size_t LeafNode::create_and_insert_record( KeyType key, ValueType value )
 {
-    Record* existingRecord = lookup(key);
-    if (!existingRecord) {
-        Record* newRecord = new Record(value);
-        insert(key, newRecord);
+    Record* existing_record = lookup( key );
+    if( !existing_record )
+    {
+        Record* new_record = new Record( value );
+        insert( key, new_record );
     }
     return static_cast< std::size_t >( m_mappings.size() );
 }
 
 void LeafNode::insert( KeyType key, Record* record )
 {
-    auto insertionPoint = m_mappings.begin();
+    auto insertion_point = m_mappings.begin();
     auto end = m_mappings.end();
-    while (insertionPoint != end && insertionPoint->first < key) {
-        ++insertionPoint;
+    while( insertion_point != end && insertion_point->first < key )
+    {
+        ++insertion_point;
     }
-    m_mappings.insert(insertionPoint, MappingType(key, record));
+    m_mappings.insert( insertion_point, MappingType( key, record ) );
 }
 
 Record* LeafNode::lookup( KeyType key ) const
 {
-    for (auto mapping : m_mappings) {
-        if (mapping.first == key) {
+    for( auto mapping : m_mappings )
+    {
+        if( mapping.first == key )
+        {
             return mapping.second;
         }
     }
@@ -83,16 +87,20 @@ Record* LeafNode::lookup( KeyType key ) const
 
 std::size_t LeafNode::remove_and_delete_record (KeyType key )
 {
-    auto removalPoint = m_mappings.begin();
+    auto removal_point = m_mappings.begin();
     auto end = m_mappings.end();
-    while (removalPoint != end && removalPoint->first != key) {
-        ++removalPoint;
+    while( removal_point != end && removal_point->first != key )
+    {
+        ++removal_point;
     }
-    if (removalPoint == end) {
+
+    if( removal_point == end )
+    {
         throw std::runtime_error( "Record Not Found" );
     }
-    auto record = *removalPoint;
-    m_mappings.erase(removalPoint);
+
+    auto record = *removal_point;
+    m_mappings.erase( removal_point );
     delete record.second;
     return static_cast< std::size_t >( m_mappings.size() );
 }
@@ -104,25 +112,27 @@ KeyType LeafNode::first_key() const
 
 void LeafNode::move_half_to( LeafNode *recipient )
 {
-    recipient->copy_half_from(m_mappings);
-    size_t size = m_mappings.size();
-    for (size_t i = min_size(); i < size; ++i) {
+    recipient->copy_half_from( m_mappings );
+    const std::size_t size = m_mappings.size();
+    for( std::size_t i = min_size(); i < size; ++i )
+    {
         m_mappings.pop_back();
     }
 }
 
-void LeafNode::copy_half_from( std::vector< std::pair< KeyType, Record* > > &aMappings )
+void LeafNode::copy_half_from( std::vector< std::pair< KeyType, Record* > > &mappings )
 {
-    for (size_t i = min_size(); i < aMappings.size(); ++i) {
-        m_mappings.push_back(aMappings[i]);
+    for( std::size_t i = min_size(); i < mappings.size(); ++i )
+    {
+        m_mappings.push_back( mappings[ i ] );
     }
 }
 
-void LeafNode::move_all_to( LeafNode *recipient, std::size_t )
+void LeafNode::move_all_to( LeafNode *recipient )
 {
-    recipient->copy_all_from(m_mappings);
+    recipient->copy_all_from( m_mappings );
     m_mappings.clear();
-    recipient->set_next(next());
+    recipient->set_next( next() );
 }
 
 void LeafNode::copy_all_from( std::vector< std::pair< KeyType, Record* > > &aMappings )

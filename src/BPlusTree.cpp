@@ -90,9 +90,9 @@ void BPlusTree::insert( KeyType key, ValueType value )
 //
 void BPlusTree::start_new_tree( KeyType key, ValueType value )
 {
-    LeafNode* newLeafNode = new LeafNode( m_order, nullptr );
-    newLeafNode->create_and_insert_record( key, value );
-    m_root = newLeafNode;
+    LeafNode* new_leaf_node = new LeafNode( m_order, nullptr );
+    new_leaf_node->create_and_insert_record( key, value );
+    m_root = new_leaf_node;
 }
 
 //
@@ -216,17 +216,17 @@ void BPlusTree::coalesce_or_redistribute( LeafNode* node )
         return;
     }
     InternalNode* parent = node->parent();
-    const std::size_t indexOfNodeInParent = parent->node_index( node );
-    const std::size_t neighborIndex = ( indexOfNodeInParent == 0 ) ? 1 : indexOfNodeInParent - 1;
-    LeafNode* neighborNode = static_cast< LeafNode* >( parent->neighbor( neighborIndex ) );
+    const std::size_t index_of_node_in_parent = parent->node_index( node );
+    const std::size_t neighbor_index = ( index_of_node_in_parent == 0 ) ? 1 : index_of_node_in_parent - 1;
+    LeafNode* neighbor_node = static_cast< LeafNode* >( parent->neighbor( neighbor_index ) );
 
-    if( node->size() + neighborNode->size() <= neighborNode->max_size() )
+    if( node->size() + neighbor_node->size() <= neighbor_node->max_size() )
     {
-        coalesce( neighborNode, node, parent, indexOfNodeInParent );
+        coalesce( neighbor_node, node, parent, index_of_node_in_parent );
     }
     else
     {
-        redistribute( neighborNode, node, parent, indexOfNodeInParent );
+        redistribute( neighbor_node, node, index_of_node_in_parent );
     }
 }
 
@@ -242,17 +242,17 @@ void BPlusTree::coalesce_or_redistribute( InternalNode* node )
     }
 
     InternalNode* parent = node->parent();
-    const std::size_t indexOfNodeInParent = parent->node_index( node );
-    const std::size_t neighborIndex = (indexOfNodeInParent == 0) ? 1 : indexOfNodeInParent - 1;
-    InternalNode* neighborNode = static_cast< InternalNode* >( parent->neighbor( neighborIndex ) );
+    const std::size_t index_of_node_in_parent = parent->node_index( node );
+    const std::size_t neighbor_index = ( index_of_node_in_parent == 0 ) ? 1 : index_of_node_in_parent - 1;
+    InternalNode* neighbor_node = static_cast< InternalNode* >( parent->neighbor( neighbor_index ) );
 
-    if( node->size() + neighborNode->size() <= neighborNode->max_size() )
+    if( node->size() + neighbor_node->size() <= neighbor_node->max_size() )
     {
-        coalesce( neighborNode, node, parent, indexOfNodeInParent );
+        coalesce( neighbor_node, node, parent, index_of_node_in_parent );
     }
     else
     {
-        redistribute( neighborNode, node, parent, indexOfNodeInParent );
+        redistribute( neighbor_node, node, index_of_node_in_parent );
     }
 }
 
@@ -267,7 +267,7 @@ void BPlusTree::coalesce( LeafNode* neighbor_node, LeafNode* node, InternalNode*
         index = 1;
     }
 
-    node->move_all_to( neighbor_node, index );
+    node->move_all_to( neighbor_node );
     parent->remove( index );
 
     if( parent->size() < parent->min_size() )
@@ -301,7 +301,7 @@ void BPlusTree::coalesce( InternalNode* neighbor_node, InternalNode* node, Inter
 //
 //
 //
-void BPlusTree::redistribute( LeafNode* neighbor_node, LeafNode* node, InternalNode* /*aParent*/, std::size_t index )
+void BPlusTree::redistribute( LeafNode* neighbor_node, LeafNode* node, std::size_t index )
 {
     if( index == 0 )
     {
@@ -316,9 +316,9 @@ void BPlusTree::redistribute( LeafNode* neighbor_node, LeafNode* node, InternalN
 //
 //
 //
-void BPlusTree::redistribute( InternalNode* neighbor_node, InternalNode* node, InternalNode* /*aParent*/, std::size_t index )
+void BPlusTree::redistribute( InternalNode* neighbor_node, InternalNode* node, std::size_t index )
 {
-    if ( index == 0)
+    if ( index == 0 )
     {
         neighbor_node->move_first_to_end_of( node );
     }
@@ -333,13 +333,14 @@ void BPlusTree::redistribute( InternalNode* neighbor_node, InternalNode* node, I
 //
 void BPlusTree::adjust_root()
 {
-    if (!m_root->is_leaf() && m_root->size() == 1)
+    if( !m_root->is_leaf() && m_root->size() == 1 )
     {
-        auto discardedNode = static_cast<InternalNode*>(m_root);
-        m_root = static_cast<InternalNode*>(m_root)->remove_and_return_only_child();
-        m_root->set_parent(nullptr);
-        delete discardedNode;
-    } else if (!m_root->size())
+        auto discarded_node = static_cast< InternalNode* >( m_root );
+        m_root = static_cast< InternalNode* >( m_root )->remove_and_return_only_child();
+        m_root->set_parent( nullptr );
+        delete discarded_node;
+    }
+    else if( !m_root->size() )
     {
         delete m_root;
         m_root = nullptr;

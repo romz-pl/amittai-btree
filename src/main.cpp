@@ -30,7 +30,7 @@ void test_c();
 
 int main()
 {
-    test_c();
+    test_a();
     return 0;
 }
 
