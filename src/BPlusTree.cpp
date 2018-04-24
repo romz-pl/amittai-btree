@@ -57,12 +57,12 @@ bool BPlusTree::is_empty() const
 //
 Record* BPlusTree::search( KeyType key )
 {
-    LeafNode* leafNode = find_leaf_node( key );
-    if( !leafNode )
+    LeafNode* leaf_node = find_leaf_node( key );
+    if( !leaf_node )
     {
         return nullptr;
     }
-    return leafNode->lookup( key );
+    return leaf_node->lookup( key );
 }
 
 
@@ -100,20 +100,20 @@ void BPlusTree::start_new_tree( KeyType key, ValueType value )
 //
 void BPlusTree::insert_into_leaf( KeyType key, ValueType value )
 {
-    LeafNode* leafNode = find_leaf_node( key );
-    if( !leafNode )
+    LeafNode* leaf_node = find_leaf_node( key );
+    if( !leaf_node )
     {
         throw std::runtime_error( "Leaf Not Found" );
     }
 
-    const std::size_t newSize = leafNode->create_and_insert_record( key, value );
-    if( newSize > leafNode->max_size() )
+    const std::size_t new_size = leaf_node->create_and_insert_record( key, value );
+    if( new_size > leaf_node->max_size() )
     {
-        LeafNode* newLeaf = split( leafNode );
-        newLeaf->set_next( leafNode->next() );
-        leafNode->set_next( newLeaf );
-        KeyType newKey = newLeaf->first_key();
-        insert_into_parent( leafNode, newKey, newLeaf );
+        LeafNode* new_leaf = split( leaf_node );
+        new_leaf->set_next( leaf_node->next() );
+        leaf_node->set_next( new_leaf );
+        KeyType newKey = new_leaf->first_key();
+        insert_into_parent( leaf_node, newKey, new_leaf );
     }
 }
 
@@ -133,12 +133,12 @@ void BPlusTree::insert_into_parent(  Node *old_node, KeyType key, Node *new_node
     }
     else
     {
-        const std::size_t newSize = parent->insert_node_after( old_node, key, new_node );
-        if( newSize > parent->max_size() )
+        const std::size_t new_size = parent->insert_node_after( old_node, key, new_node );
+        if( new_size > parent->max_size() )
         {
-            InternalNode* newNode = split( parent );
-            KeyType newKey = newNode->replace_and_return_first_key();
-            insert_into_parent( parent, newKey, newNode );
+            InternalNode* new_node = split( parent );
+            KeyType new_key = new_node->replace_and_return_first_key();
+            insert_into_parent( parent, new_key, new_node );
         }
     }
 }
@@ -148,9 +148,9 @@ void BPlusTree::insert_into_parent(  Node *old_node, KeyType key, Node *new_node
 //
 LeafNode* BPlusTree::split( LeafNode* node )
 {
-    LeafNode* newNode = new LeafNode( m_order, node->parent() );
-    node->move_half_to( newNode );
-    return newNode;
+    LeafNode* new_node = new LeafNode( m_order, node->parent() );
+    node->move_half_to( new_node );
+    return new_node;
 }
 
 //
@@ -158,9 +158,9 @@ LeafNode* BPlusTree::split( LeafNode* node )
 //
 InternalNode* BPlusTree::split( InternalNode* node )
 {
-    InternalNode* newNode = new InternalNode( m_order, node->parent() );
-    node->move_half_to( newNode );
-    return newNode;
+    InternalNode* new_node = new InternalNode( m_order, node->parent() );
+    node->move_half_to( new_node );
+    return new_node;
 }
 
 //
@@ -198,8 +198,8 @@ void BPlusTree::remove_from_leaf( KeyType key )
         return;
     }
 
-    const std::size_t newSize = leafNode->remove_and_delete_record( key );
-    if( newSize < leafNode->min_size() )
+    const std::size_t new_size = leafNode->remove_and_delete_record( key );
+    if( new_size < leafNode->min_size() )
     {
         coalesce_or_redistribute( leafNode );
     }
