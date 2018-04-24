@@ -47,6 +47,8 @@ private:
     void copy_last_from( MappingType pair );
     void copy_first_from( MappingType pair, std::size_t parent_index );
 
+    bool is_sorted() const;
+
 private:
     std::vector< MappingType > m_mappings;
 
