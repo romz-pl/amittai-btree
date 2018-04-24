@@ -12,7 +12,7 @@ InternalNode::InternalNode( std::size_t order, InternalNode *parent )
 
 InternalNode::~InternalNode()
 {
-    for (auto mapping : m_mappings)
+    for( auto mapping : m_mappings )
     {
         delete mapping.second;
     }
@@ -44,12 +44,12 @@ std::size_t InternalNode::max_size() const
 
 KeyType InternalNode::key_at( std::size_t index ) const
 {
-    return m_mappings[index].first;
+    return m_mappings[ index ].first;
 }
 
 void InternalNode::set_key_at( std::size_t index, KeyType key )
 {
-    m_mappings[index].first = key;
+    m_mappings[ index ].first = key;
 }
 
 Node* InternalNode::first_child() const
@@ -66,95 +66,103 @@ void InternalNode::populate_new_root( Node *old_node, KeyType new_key, Node *new
 std::size_t InternalNode::insert_node_after( Node *old_node, KeyType new_key, Node *new_node )
 {
     auto iter = m_mappings.begin();
-    for (; iter != m_mappings.end() && iter->second != old_node; ++iter);
-    m_mappings.insert(iter + 1, std::make_pair(new_key, new_node));
+    for( ; iter != m_mappings.end() && iter->second != old_node; ++iter )
+    {
+        ; // empty instruction!
+    }
+
+    m_mappings.insert( iter + 1, std::make_pair( new_key, new_node ) );
     return size();
 }
 
 void InternalNode::remove( std::size_t index )
 {
-    m_mappings.erase(m_mappings.begin() + index);
+    m_mappings.erase( m_mappings.begin() + index );
 }
 
 Node* InternalNode::remove_and_return_only_child()
 {
-    Node* firstChild = m_mappings.front().second;
+    Node* first_child = m_mappings.front().second;
     m_mappings.pop_back();
-    return firstChild;
+    return first_child;
 }
 
 KeyType InternalNode::replace_and_return_first_key()
 {
-    KeyType newKey = m_mappings[0].first;
-    m_mappings[0].first = DUMMY_KEY;
-    return newKey;
+    KeyType new_key = m_mappings[ 0 ].first;
+    m_mappings[ 0 ].first = DUMMY_KEY;
+    return new_key;
 }
 
 void InternalNode::move_half_to( InternalNode *recipient )
 {
-    recipient->copy_half_from(m_mappings);
-    size_t size = m_mappings.size();
-    for (size_t i = min_size(); i < size; ++i) {
+    recipient->copy_half_from( m_mappings );
+    const std::size_t size = m_mappings.size();
+    for( std::size_t i = min_size(); i < size; ++i )
+    {
         m_mappings.pop_back();
     }
 }
 
 void InternalNode::copy_half_from( std::vector< MappingType > &mappings )
 {
-    for (size_t i = min_size(); i < mappings.size(); ++i) {
-        mappings[i].second->set_parent(this);
-        m_mappings.push_back(mappings[i]);
+    for( std::size_t i = min_size(); i < mappings.size(); ++i )
+    {
+        mappings[ i ].second->set_parent( this );
+        m_mappings.push_back( mappings[ i ] );
     }
 }
 
 void InternalNode::move_all_to( InternalNode *recipient, std::size_t index_in_parent )
 {
-    m_mappings[0].first = parent()->key_at(index_in_parent);
-    recipient->copy_all_from(m_mappings);
+    m_mappings[ 0 ].first = parent()->key_at( index_in_parent );
+    recipient->copy_all_from( m_mappings );
     m_mappings.clear();
 }
 
 void InternalNode::copy_all_from( std::vector< MappingType > &mappings )
 {
-    for (auto mapping : mappings) {
-        mapping.second->set_parent(this);
-        m_mappings.push_back(mapping);
+    for( auto m : mappings )
+    {
+        m.second->set_parent( this );
+        m_mappings.push_back( m );
     }
 }
 
 void InternalNode::move_first_to_end_of( InternalNode *recipient )
 {
-    recipient->copy_last_from(m_mappings.front());
-    m_mappings.erase(m_mappings.begin());
-    parent()->set_key_at(1, m_mappings.front().first);
+    recipient->copy_last_from( m_mappings.front() );
+    m_mappings.erase( m_mappings.begin() );
+    parent()->set_key_at( 1, m_mappings.front().first );
 }
 
 void InternalNode::copy_last_from( MappingType pair )
 {
-    m_mappings.push_back(pair);
-    m_mappings.back().second->set_parent(this);
+    m_mappings.push_back( pair );
+    m_mappings.back().second->set_parent( this );
 }
 
 void InternalNode::move_last_to_front_of( InternalNode *recipient, std::size_t parent_index )
 {
-    recipient->copy_first_from(m_mappings.back(), parent_index);
+    recipient->copy_first_from( m_mappings.back(), parent_index );
     m_mappings.pop_back();
 }
 
 void InternalNode::copy_first_from( MappingType pair, std::size_t parent_index )
 {
-    m_mappings.front().first = parent()->key_at(parent_index);
-    m_mappings.insert(m_mappings.begin(), pair);
+    m_mappings.front().first = parent()->key_at( parent_index );
+    m_mappings.insert( m_mappings.begin(), pair );
     m_mappings.front().first = DUMMY_KEY;
-    m_mappings.front().second->set_parent(this);
-    parent()->set_key_at(parent_index, m_mappings.front().first);
+    m_mappings.front().second->set_parent( this );
+    parent()->set_key_at( parent_index, m_mappings.front().first );
 }
 
 Node* InternalNode::lookup( KeyType key ) const
 {
     auto locator = m_mappings.begin();
     auto end = m_mappings.end();
-    while (locator != end && key >= locator->first) {
+    while( locator != end && key >= locator->first )
+    {
         ++locator;
     }
     // locator->first is now the least key k such that aKey < k.
@@ -177,6 +185,6 @@ std::size_t InternalNode::node_index( Node *node ) const
 
 Node* InternalNode::neighbor( std::size_t index ) const
 {
-    return m_mappings[index].second;
+    return m_mappings[ index ].second;
 }
 
