@@ -131,7 +131,7 @@ std::vector< BPlusTree::EntryType > Io::range( KeyType start, KeyType end )
     return entries;
 }
 
-void Io::leaf_node_copy_range_starting_from( LeafNode* leaf, KeyType key, std::vector< LeafNode::EntryType >& vector )
+void Io::leaf_node_copy_range_starting_from( LeafNode* leaf, KeyType key, std::vector< EntryType >& vector )
 {
     bool found = false;
     for (auto mapping : leaf->m_mappings) {
@@ -144,7 +144,7 @@ void Io::leaf_node_copy_range_starting_from( LeafNode* leaf, KeyType key, std::v
     }
 }
 
-void Io::leaf_node_copy_range_until( LeafNode* leaf, KeyType key, std::vector< LeafNode::EntryType >& vector )
+void Io::leaf_node_copy_range_until( LeafNode* leaf, KeyType key, std::vector< EntryType >& vector )
 {
     bool found = false;
     for (auto mapping : leaf->m_mappings) {
@@ -157,7 +157,7 @@ void Io::leaf_node_copy_range_until( LeafNode* leaf, KeyType key, std::vector< L
     }
 }
 
-void Io::leaf_node_copy_range( LeafNode* leaf, std::vector< LeafNode::EntryType >& vector )
+void Io::leaf_node_copy_range( LeafNode* leaf, std::vector< EntryType >& vector )
 {
     for (auto mapping : leaf->m_mappings) {
         vector.push_back(std::make_tuple(mapping.m_key, mapping.m_record->value(), leaf));
