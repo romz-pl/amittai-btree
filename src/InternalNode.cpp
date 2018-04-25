@@ -150,11 +150,14 @@ void InternalNode::move_half_to( InternalNode *recipient )
     // assert( is_sorted() );
 
     recipient->copy_half_from( m_elt );
-    const std::size_t size = m_elt.size();
-    for( std::size_t i = m_tree->internal_min_size(); i < size; ++i )
-    {
-        m_elt.pop_back();
-    }
+//    const std::size_t size = m_elt.size();
+//    for( std::size_t i = m_tree->internal_min_size(); i < size; ++i )
+//    {
+//        m_elt.pop_back();
+//    }
+
+    const auto start = m_elt.begin() + m_tree->internal_min_size();
+    m_elt.erase( start, m_elt.end() );
 
     // assert( is_sorted() );
 }
