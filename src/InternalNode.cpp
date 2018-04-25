@@ -263,7 +263,7 @@ void InternalNode::copy_first_from( const InternalElt& pair, std::size_t parent_
 //
 Node* InternalNode::lookup( KeyType key ) const
 {
-/*    // assert( is_sorted() );
+/*
     if( !is_sorted() )
     {
         for( auto m : m_mappings )
@@ -274,18 +274,34 @@ Node* InternalNode::lookup( KeyType key ) const
         exit(1);
     }
 */
-    auto locator = m_elt.begin();
-    auto end = m_elt.end();
-    while( locator != end && key >= locator->m_key )
-    {
-        ++locator;
-    }
+
+
+    assert( m_elt.front().m_key <= key );
+    // assert( is_sorted() );
+
+
+    //
+    // Is this equivalent to what is below ??
+    //
+
+    const auto pred = [ key ]( const InternalElt& v ){ return v.m_key > key; };
+    auto locator = std::find_if( m_elt.begin(), m_elt.end(), pred );
     // locator->m_key is now the least key "k" such that key < k.
     // One before is the greatest key k such that key >= k.
 
     assert( locator != m_elt.begin() );
     --locator;
     return locator->m_node;
+
+
+
+    /* This algorithm should be correct?!
+
+    const auto pred = [ key ]( const InternalElt& v ){ return v.m_key <= key ; };
+    const auto locator = std::find_if( m_elt.rbegin(), m_elt.rend(), pred );
+
+    return locator->m_node;
+    */
 }
 
 //
