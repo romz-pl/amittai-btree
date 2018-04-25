@@ -8,7 +8,7 @@ Node::Node( BPlusTree *tree, InternalNode* parent )
     : m_tree{ tree }
     , m_parent{ parent }
 {
-
+    assert( m_tree );
 }
 
 //
