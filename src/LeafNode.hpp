@@ -14,13 +14,11 @@ class LeafNode : public Node
     friend class Printer;
 
 public:
-    LeafNode( std::size_t order, InternalNode* parent );
+    LeafNode( BPlusTree *tree, InternalNode* parent );
     ~LeafNode();
 
     bool is_leaf() const override;
     std::size_t size() const override;
-    std::size_t min_size() const override;
-    std::size_t max_size() const override;
 
     LeafNode* next() const;
     void set_next( LeafNode* next );

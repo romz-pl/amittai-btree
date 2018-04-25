@@ -8,8 +8,8 @@
 //
 //
 //
-InternalNode::InternalNode( std::size_t order, InternalNode *parent )
-    : Node( order, parent )
+InternalNode::InternalNode( BPlusTree *tree, InternalNode *parent )
+    : Node( tree, parent )
 {
 
 }
@@ -39,26 +39,6 @@ bool InternalNode::is_leaf() const
 std::size_t InternalNode::size() const
 {
     return m_elt.size();
-}
-
-//
-//
-//
-std::size_t InternalNode::min_size() const
-{
-    return order() / 2;
-}
-
-//
-//
-//
-std::size_t InternalNode::max_size() const
-{
-    // Includes the first entry, which
-    // has key DUMMY_KEY and a value that
-    // points to the left of the first positive key k1
-    // (i.e., a node whose keys are all < k1).
-    return order();
 }
 
 //
@@ -171,7 +151,7 @@ void InternalNode::move_half_to( InternalNode *recipient )
 
     recipient->copy_half_from( m_elt );
     const std::size_t size = m_elt.size();
-    for( std::size_t i = min_size(); i < size; ++i )
+    for( std::size_t i = m_tree->internal_min_size(); i < size; ++i )
     {
         m_elt.pop_back();
     }
@@ -186,7 +166,7 @@ void InternalNode::copy_half_from(const std::vector< InternalElt >& ve )
 {
     // assert( is_sorted() );
 
-    for( std::size_t i = min_size(); i < ve.size(); ++i )
+    for( std::size_t i = m_tree->internal_min_size(); i < ve.size(); ++i )
     {
         ve[ i ].m_node->set_parent( this );
         m_elt.push_back( ve[ i ] );

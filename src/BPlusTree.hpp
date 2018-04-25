@@ -37,6 +37,12 @@ public:
     /// Remove all elements from the B+ tree. You can then build
     /// it up again by inserting new elements into it.
     void destroy_tree();
+
+    std::size_t leaf_min_size() const;
+    std::size_t leaf_max_size() const;
+
+    std::size_t internal_min_size() const;
+    std::size_t internal_max_size() const;
     
 
 

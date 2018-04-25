@@ -14,13 +14,11 @@ class InternalNode : public Node
     friend class Printer;
 
 public:
-    InternalNode( std::size_t order, InternalNode* parent );
+    InternalNode( BPlusTree *tree, InternalNode* parent );
     ~InternalNode();
 
     bool is_leaf() const override;
     std::size_t size() const override;
-    std::size_t min_size() const override;
-    std::size_t max_size() const override;
 
 
     KeyType key_at( std::size_t index ) const;
