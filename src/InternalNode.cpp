@@ -150,12 +150,6 @@ void InternalNode::move_half_to( InternalNode *recipient )
     // assert( is_sorted() );
 
     recipient->copy_half_from( m_elt );
-//    const std::size_t size = m_elt.size();
-//    for( std::size_t i = m_tree->internal_min_size(); i < size; ++i )
-//    {
-//        m_elt.pop_back();
-//    }
-
     const auto start = m_elt.begin() + m_tree->internal_min_size();
     m_elt.erase( start, m_elt.end() );
 
@@ -286,8 +280,10 @@ Node* InternalNode::lookup( KeyType key ) const
     {
         ++locator;
     }
-    // locator->first is now the least key k such that aKey < k.
-    // One before is the greatest key k such that aKey >= k.
+    // locator->m_key is now the least key "k" such that key < k.
+    // One before is the greatest key k such that key >= k.
+
+    assert( locator != m_elt.begin() );
     --locator;
     return locator->m_node;
 }
