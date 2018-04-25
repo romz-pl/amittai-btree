@@ -48,7 +48,7 @@ private:
 
     using EntryType = std::tuple< KeyType, ValueType, LeafNode* >;
 
-    std::vector< BPlusTree::EntryType > range( KeyType start, KeyType end );
+    std::vector< EntryType > range( KeyType start, KeyType end );
     LeafNode* find_leaf_node( KeyType key, bool printing = false, bool verbose = false );
     void print_value( KeyType key, bool print_path, bool verbose );
 

@@ -112,7 +112,7 @@ void Io::print_range( KeyType start, KeyType end )
     }
 }
 
-std::vector< BPlusTree::EntryType > Io::range( KeyType start, KeyType end )
+std::vector< Io::EntryType > Io::range( KeyType start, KeyType end )
 {
     auto startLeaf = find_leaf_node(start);
     auto endLeaf = find_leaf_node(end);

@@ -1,7 +1,6 @@
 #ifndef ROMZ_AMITTAI_BTREE_BPLUSTREE_H
 #define ROMZ_AMITTAI_BTREE_BPLUSTREE_H
 
-#include <tuple>
 #include "Definitions.hpp"
 #include "Record.hpp"
 #include "KeyType.h"
@@ -22,11 +21,6 @@ public:
     /// data structure and its operations.
     explicit BPlusTree( std::size_t order );
     ~BPlusTree();
-    
-    /// The type used in the API for inserting a new key-value pair
-    /// into the tree.  The third item is the type of the Node into
-    /// which the key will be inserted.
-    using EntryType = std::tuple< KeyType, ValueType, LeafNode* >;
     
     /// Returns true if this B+ tree has no keys or values.
     bool is_empty() const;
