@@ -8,8 +8,8 @@
 //
 //
 //
-LeafNode::LeafNode( std::size_t order, InternalNode* parent )
-    : Node( order, parent )
+LeafNode::LeafNode( BPlusTree *tree, InternalNode* parent )
+    : Node( tree, parent )
     , m_next{ nullptr }
 {
 
@@ -42,18 +42,6 @@ std::size_t LeafNode::size() const
     return m_elt.size();
 }
 
-//
-//
-//
-std::size_t LeafNode::min_size() const
-{
-    return order() / 2;
-}
-
-std::size_t LeafNode::max_size() const
-{
-    return order() - 1;
-}
 
 //
 //
@@ -158,7 +146,7 @@ void LeafNode::move_half_to( LeafNode *recipient )
     assert( is_sorted() );
 
     recipient->copy_half_from( m_elt );
-    const auto beg = m_elt.begin() + min_size();
+    const auto beg = m_elt.begin() + m_tree->leaf_min_size();
     m_elt.erase( beg, m_elt.end() );
 
     assert( is_sorted() );
@@ -171,8 +159,8 @@ void LeafNode::copy_half_from(const std::vector< LeafElt > &ve )
 {
     assert( is_sorted() );
 
-    m_elt.reserve( m_elt.size() + ve.size() - min_size() );
-    const auto beg = ve.begin() + min_size();
+    m_elt.reserve( m_elt.size() + ve.size() - m_tree->leaf_min_size() );
+    const auto beg = ve.begin() + m_tree->leaf_min_size();
     m_elt.insert( m_elt.end(), beg, ve.end() );
 
     assert( is_sorted() );

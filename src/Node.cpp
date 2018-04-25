@@ -4,19 +4,11 @@
 //
 //
 //
-Node::Node( std::size_t order, InternalNode* parent )
-    : m_order{ order }
+Node::Node( BPlusTree *tree, InternalNode* parent )
+    : m_tree{ tree }
     , m_parent{ parent }
 {
-
-}
-
-//
-//
-//
-std::size_t Node::order() const
-{
-    return m_order;
+    assert( m_tree );
 }
 
 //
