@@ -13,8 +13,10 @@ public:
     Node( BPlusTree *tree, InternalNode *parent );
     virtual ~Node() = default;
 
-    InternalNode* parent() const;
+    InternalNode* get_parent();
+    // const InternalNode* get_parent() const;
     void set_parent( InternalNode* parent );
+
     bool is_root() const;
 
     virtual InternalNode* internal();

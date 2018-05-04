@@ -53,7 +53,7 @@ KeyType InternalNode::key_at( std::size_t index ) const
 //
 //
 //
-void InternalNode::set_key_at( std::size_t index, KeyType key )
+void InternalNode::set_key_at( std::size_t index, const KeyType& key )
 {
     assert( index < m_elt.size() );
     m_elt[ index ].m_key = key;
@@ -71,7 +71,7 @@ Node* InternalNode::first_child() const
 //
 //
 //
-void InternalNode::populate_new_root( Node *old_node, KeyType new_key, Node *new_node )
+void InternalNode::populate_new_root( Node *old_node, const KeyType& new_key, Node *new_node )
 {
     // assert( is_sorted() );
 
@@ -85,7 +85,7 @@ void InternalNode::populate_new_root( Node *old_node, KeyType new_key, Node *new
 //
 //
 //
-std::size_t InternalNode::insert_node_after( Node *old_node, KeyType new_key, Node *new_node )
+void InternalNode::insert_after( Node *old_node, const KeyType& new_key, Node *new_node )
 {
     // assert( is_sorted() );
 
@@ -96,7 +96,6 @@ std::size_t InternalNode::insert_node_after( Node *old_node, KeyType new_key, No
     m_elt.insert( iter + 1, InternalElt( new_key, new_node ) );
 
     // assert( is_sorted() );
-    return size();
 }
 
 //
@@ -135,7 +134,7 @@ KeyType InternalNode::replace_and_return_first_key()
 {
     // assert( is_sorted() );
 
-    KeyType new_key = m_elt[ 0 ].m_key;
+    const KeyType new_key = m_elt[ 0 ].m_key;
     m_elt[ 0 ].m_key = KeyType( DUMMY_KEY );
 
     // assert( is_sorted() );
@@ -145,61 +144,43 @@ KeyType InternalNode::replace_and_return_first_key()
 //
 //
 //
-void InternalNode::move_half_to( InternalNode *recipient )
+void InternalNode::move_half( InternalNode *from, InternalNode *to )
 {
-    // assert( is_sorted() );
+    assert( from->m_tree == to->m_tree );
 
-    recipient->copy_half_from( m_elt );
-    const auto start = m_elt.begin() + m_tree->internal_min_size();
-    m_elt.erase( start, m_elt.end() );
+    const auto m = from->m_elt.begin() + from->m_tree->internal_min_size();
+    const auto e = from->m_elt.end();
 
-    // assert( is_sorted() );
-}
-
-//
-//
-//
-void InternalNode::copy_half_from(const std::vector< InternalElt >& ve )
-{
-    // assert( is_sorted() );
-
-    for( std::size_t i = m_tree->internal_min_size(); i < ve.size(); ++i )
+    for( auto it = m; it != e; ++it )
     {
-        ve[ i ].m_node->set_parent( this );
-        m_elt.push_back( ve[ i ] );
+        assert( it->m_node->get_parent() == from );
+        it->m_node->set_parent( to );
     }
 
-    // assert( is_sorted() );
+    to->m_elt.insert( to->m_elt.end(), std::make_move_iterator( m ), std::make_move_iterator( e ) );
+
+    from->m_elt.erase( m, e );
 }
 
 //
 //
 //
-void InternalNode::move_all_to( InternalNode *recipient, std::size_t index_in_parent )
+void InternalNode::move_all( InternalNode *from, InternalNode *to, std::size_t index_in_parent )
 {
-    // assert( is_sorted() );
+    from->m_elt[ 0 ].m_key = from->get_parent()->key_at( index_in_parent );
 
-    m_elt[ 0 ].m_key = parent()->key_at( index_in_parent );
-    recipient->copy_all_from( m_elt );
-    m_elt.clear();
+    const auto b = from->m_elt.begin();
+    const auto e = from->m_elt.end();
 
-    // assert( is_sorted() );
-}
-
-//
-//
-//
-void InternalNode::copy_all_from(const std::vector< InternalElt >& ve )
-{
-    // assert( is_sorted() );
-
-    for( auto m : ve )
+    for( auto it = b; it != e; ++it )
     {
-        m.m_node->set_parent( this );
-        m_elt.push_back( m );
+        assert( it->m_node->get_parent() == from );
+        it->m_node->set_parent( to );
     }
 
-    // assert( is_sorted() );
+    to->m_elt.insert( to->m_elt.end(), std::make_move_iterator( b ), std::make_move_iterator( e ) );
+
+    from->m_elt.clear();
 }
 
 //
@@ -211,7 +192,7 @@ void InternalNode::move_first_to_end_of( InternalNode *recipient )
 
     recipient->copy_last_from( m_elt.front() );
     m_elt.erase( m_elt.begin() );
-    parent()->set_key_at( 1, m_elt.front().m_key );
+    get_parent()->set_key_at( 1, m_elt.front().m_key );
 
     // assert( is_sorted() );
 }
@@ -249,11 +230,11 @@ void InternalNode::copy_first_from( const InternalElt& pair, std::size_t parent_
 {
     // assert( is_sorted() );
 
-    m_elt.front().m_key = parent()->key_at( parent_index );
+    m_elt.front().m_key = get_parent()->key_at( parent_index );
     m_elt.insert( m_elt.begin(), pair );
     m_elt.front().m_key = KeyType( DUMMY_KEY );
     m_elt.front().m_node->set_parent( this );
-    parent()->set_key_at( parent_index, m_elt.front().m_key );
+    get_parent()->set_key_at( parent_index, m_elt.front().m_key );
 
     // assert( is_sorted() );
 }
@@ -261,7 +242,7 @@ void InternalNode::copy_first_from( const InternalElt& pair, std::size_t parent_
 //
 //
 //
-Node* InternalNode::lookup( KeyType key ) const
+Node* InternalNode::lookup( const KeyType& key ) const
 {
 /*
     if( !is_sorted() )

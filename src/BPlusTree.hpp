@@ -25,13 +25,13 @@ public:
     /// Returns true if this B+ tree has no keys or values.
     bool is_empty() const;
 
-    Record* search( KeyType key );
+    Record* search( const KeyType& key ) const;
     
     /// Insert a key-value pair into this B+ tree.
-    void insert( KeyType key, ValueType value );
+    void insert( const KeyType& key, ValueType value );
     
     /// Remove a key and its value from this B+ tree.
-    void remove( KeyType key );
+    void remove( const KeyType& key );
     
 
     /// Remove all elements from the B+ tree. You can then build
@@ -47,13 +47,10 @@ public:
 
 
 private:
-    void start_new_tree( KeyType key, ValueType value );
-    void insert_into_leaf( KeyType key, ValueType value );
-    void insert_into_parent( Node* old_node, KeyType key, Node* new_node );
-    void remove_from_leaf( KeyType key );
-
-    LeafNode* split( LeafNode* node );
-    InternalNode* split( InternalNode* node );
+    void start_new_tree( const KeyType& key, ValueType value );
+    void insert_into_leaf( const KeyType& key, ValueType value );
+    void insert_into_parent( Node* old_node, const KeyType& key, Node* new_node );
+    void remove_from_leaf( const KeyType& key );
 
     void coalesce_or_redistribute( LeafNode* node );
     void coalesce_or_redistribute( InternalNode* node );
@@ -67,9 +64,11 @@ private:
     void adjust_root();
 
 
-    LeafNode* find_leaf_node( KeyType key );
+    LeafNode *find_leaf_node( const KeyType& key );
+    const LeafNode *find_leaf_node( const KeyType& key ) const;
 
-private:
+// private:
+public:
     const std::size_t m_order;
     Node* m_root;
 };

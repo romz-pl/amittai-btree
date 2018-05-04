@@ -7,7 +7,7 @@
 class InternalElt
 {
 public:
-    InternalElt( KeyType key, Node* node );
+    InternalElt( const KeyType &key, Node* node );
     ~InternalElt() = default;
 
 public:

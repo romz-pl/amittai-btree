@@ -22,6 +22,7 @@
 #include <cassert>
 #include "BPlusTree.hpp"
 #include "Definitions.hpp"
+#include "Printer.hpp"
 
 void test_a();
 void test_b();
@@ -49,13 +50,16 @@ void test_a()
 
 void test_b()
 {
-    const std::size_t order = 10;
-    const std::size_t item_no = 100;
+    Printer printer;
+    const std::size_t order = 3;
+    const std::size_t item_no = 10;
     BPlusTree tree( order );
 
     for( std::size_t i = 0; i < item_no; i++ )
     {
         tree.insert( i, i );
+        printer.print_tree( tree.m_root );
+        std::cout << "\n";
     }
 
     for( std::size_t i = 0; i < item_no; i++ )
@@ -66,6 +70,8 @@ void test_b()
     for( std::size_t i = 0; i < item_no; i++ )
     {
         tree.remove( i );
+        printer.print_tree( tree.m_root );
+        std::cout << "\n";
     }
 
     for( std::size_t i = 0; i < item_no; i++ )

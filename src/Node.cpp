@@ -14,10 +14,20 @@ Node::Node( BPlusTree *tree, InternalNode* parent )
 //
 //
 //
-InternalNode* Node::parent() const
+InternalNode *Node::get_parent()
 {
     return m_parent;
 }
+
+/*
+//
+//
+//
+const InternalNode *Node::get_parent() const
+{
+    return m_parent;
+}
+*/
 
 //
 //
