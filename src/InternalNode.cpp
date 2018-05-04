@@ -85,7 +85,7 @@ void InternalNode::populate_new_root( Node *old_node, KeyType new_key, Node *new
 //
 //
 //
-std::size_t InternalNode::insert_node_after( Node *old_node, KeyType new_key, Node *new_node )
+void InternalNode::insert_node_after( Node *old_node, KeyType new_key, Node *new_node )
 {
     // assert( is_sorted() );
 
@@ -96,7 +96,6 @@ std::size_t InternalNode::insert_node_after( Node *old_node, KeyType new_key, No
     m_elt.insert( iter + 1, InternalElt( new_key, new_node ) );
 
     // assert( is_sorted() );
-    return size();
 }
 
 //

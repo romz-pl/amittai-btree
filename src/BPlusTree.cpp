@@ -135,8 +135,8 @@ void BPlusTree::insert_into_parent(  Node *old_node, KeyType key, Node *new_node
     {
         InternalNode* parent = old_node->get_parent();
         assert( parent );
-        const std::size_t new_size = parent->insert_node_after( old_node, key, new_node );
-        if( new_size > internal_max_size() )
+        parent->insert_node_after( old_node, key, new_node );
+        if( parent->size() > internal_max_size() )
         {
             InternalNode* new_node = split( parent );
             KeyType new_key = new_node->replace_and_return_first_key();
