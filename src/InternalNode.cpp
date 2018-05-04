@@ -144,31 +144,22 @@ KeyType InternalNode::replace_and_return_first_key()
 //
 //
 //
-void InternalNode::move_half_to( InternalNode *recipient )
+void InternalNode::move_half( InternalNode *from, InternalNode *to )
 {
-    // assert( is_sorted() );
+    assert( from->m_tree == to->m_tree );
 
-    recipient->copy_half_from( m_elt );
-    const auto start = m_elt.begin() + m_tree->internal_min_size();
-    m_elt.erase( start, m_elt.end() );
+    const auto m = from->m_elt.begin() + from->m_tree->internal_min_size();
+    const auto e = from->m_elt.end();
 
-    // assert( is_sorted() );
-}
-
-//
-//
-//
-void InternalNode::copy_half_from(const std::vector< InternalElt >& ve )
-{
-    // assert( is_sorted() );
-
-    for( std::size_t i = m_tree->internal_min_size(); i < ve.size(); ++i )
+    for( auto it = m; it != e; ++it )
     {
-        ve[ i ].m_node->set_parent( this );
-        m_elt.push_back( ve[ i ] );
+        assert( it->m_node->get_parent() == from );
+        it->m_node->set_parent( to );
     }
 
-    // assert( is_sorted() );
+    to->m_elt.insert( to->m_elt.end(), std::make_move_iterator( m ), std::make_move_iterator( e ) );
+
+    from->m_elt.erase( m, e );
 }
 
 //

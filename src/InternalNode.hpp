@@ -54,7 +54,6 @@ public:
     KeyType replace_and_return_first_key();
 
 
-    void move_half_to( InternalNode* recipient );
     void move_all_to( InternalNode* recipient, std::size_t index_in_parent );
     void move_first_to_end_of( InternalNode* recipient );
     void move_last_to_front_of( InternalNode* recipient, std::size_t parent_index );
@@ -67,9 +66,10 @@ public:
     InternalNode* internal() override;
     const InternalNode* internal() const override;
 
+    static void move_half( InternalNode *from, InternalNode *to );
+
 
 private:
-    void copy_half_from( const std::vector< InternalElt >& ve );
     void copy_all_from( const std::vector< InternalElt >& ve );
     void copy_last_from( const InternalElt& pair );
     void copy_first_from( const InternalElt& pair, std::size_t parent_index );

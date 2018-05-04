@@ -179,7 +179,8 @@ void BPlusTree::insert_into_parent(  Node *old_node, const KeyType& key, Node *n
         if( parent->size() > internal_max_size() )
         {
             InternalNode* new_parent = new InternalNode( this, parent->get_parent() );
-            parent->move_half_to( new_parent );
+            // parent->move_half_to( new_parent );
+            InternalNode::move_half( parent, new_parent );
 
             const KeyType new_key = new_parent->replace_and_return_first_key();
             insert_into_parent( parent, new_key, new_parent );
