@@ -179,7 +179,7 @@ void InternalNode::move_all_to( InternalNode *recipient, std::size_t index_in_pa
 {
     // assert( is_sorted() );
 
-    m_elt[ 0 ].m_key = parent()->key_at( index_in_parent );
+    m_elt[ 0 ].m_key = get_parent()->key_at( index_in_parent );
     recipient->copy_all_from( m_elt );
     m_elt.clear();
 
@@ -211,7 +211,7 @@ void InternalNode::move_first_to_end_of( InternalNode *recipient )
 
     recipient->copy_last_from( m_elt.front() );
     m_elt.erase( m_elt.begin() );
-    parent()->set_key_at( 1, m_elt.front().m_key );
+    get_parent()->set_key_at( 1, m_elt.front().m_key );
 
     // assert( is_sorted() );
 }
@@ -249,11 +249,11 @@ void InternalNode::copy_first_from( const InternalElt& pair, std::size_t parent_
 {
     // assert( is_sorted() );
 
-    m_elt.front().m_key = parent()->key_at( parent_index );
+    m_elt.front().m_key = get_parent()->key_at( parent_index );
     m_elt.insert( m_elt.begin(), pair );
     m_elt.front().m_key = KeyType( DUMMY_KEY );
     m_elt.front().m_node->set_parent( this );
-    parent()->set_key_at( parent_index, m_elt.front().m_key );
+    get_parent()->set_key_at( parent_index, m_elt.front().m_key );
 
     // assert( is_sorted() );
 }

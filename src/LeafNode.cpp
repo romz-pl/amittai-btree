@@ -202,7 +202,7 @@ void LeafNode::move_first_to_end_of( LeafNode* recipient )
 
     recipient->copy_last_from( m_elt.front() );
     m_elt.erase( m_elt.begin() );
-    parent()->set_key_at( 1, m_elt.front().m_key );
+    get_parent()->set_key_at( 1, m_elt.front().m_key );
 
     assert( is_sorted() );
 }
@@ -240,7 +240,7 @@ void LeafNode::copy_first_from( const LeafElt& pair, std::size_t parent_index )
     assert( is_sorted() );
 
     m_elt.insert( m_elt.begin(), pair );
-    parent()->set_key_at( parent_index, m_elt.front().m_key );
+    get_parent()->set_key_at( parent_index, m_elt.front().m_key );
 
     assert( is_sorted() );
 }
