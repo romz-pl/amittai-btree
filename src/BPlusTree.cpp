@@ -56,14 +56,14 @@ bool BPlusTree::is_empty() const
 //
 //
 //
-Record* BPlusTree::search( const KeyType& key )
+Record* BPlusTree::search( const KeyType& key ) const
 {
     if( is_empty() )
     {
         return nullptr;
     }
 
-    LeafNode* leaf_node = find_leaf_node( key );
+    const LeafNode* leaf_node = find_leaf_node( key );
     assert( leaf_node );
 
     return leaf_node->lookup( key );
@@ -79,7 +79,24 @@ LeafNode* BPlusTree::find_leaf_node( const KeyType& key )
     auto node = m_root;
     while( !node->is_leaf() )
     {
-        InternalNode* internalNode = node->internal();
+        const InternalNode* internalNode = node->internal();
+        node = internalNode->lookup( key );
+    }
+
+    return node->leaf();
+}
+
+//
+//
+//
+const LeafNode* BPlusTree::find_leaf_node( const KeyType& key ) const
+{
+    assert( !is_empty() );
+
+    auto node = m_root;
+    while( !node->is_leaf() )
+    {
+        const InternalNode* internalNode = node->internal();
         node = internalNode->lookup( key );
     }
 

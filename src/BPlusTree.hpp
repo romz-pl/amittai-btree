@@ -25,7 +25,7 @@ public:
     /// Returns true if this B+ tree has no keys or values.
     bool is_empty() const;
 
-    Record* search( const KeyType& key );
+    Record* search( const KeyType& key ) const;
     
     /// Insert a key-value pair into this B+ tree.
     void insert( const KeyType& key, ValueType value );
@@ -67,7 +67,8 @@ private:
     void adjust_root();
 
 
-    LeafNode* find_leaf_node( const KeyType& key );
+    LeafNode *find_leaf_node( const KeyType& key );
+    const LeafNode *find_leaf_node( const KeyType& key ) const;
 
 private:
     const std::size_t m_order;
