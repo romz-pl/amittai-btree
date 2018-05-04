@@ -10,12 +10,12 @@ class LeafNode;
 class Node
 {
 public:
-    Node( BPlusTree *tree, InternalNode *get_parent );
+    Node( BPlusTree *tree, InternalNode *parent );
     virtual ~Node() = default;
 
     InternalNode* get_parent();
     const InternalNode* get_parent() const;
-    void set_parent( InternalNode* get_parent );
+    void set_parent( InternalNode* parent );
 
     bool is_root() const;
 
