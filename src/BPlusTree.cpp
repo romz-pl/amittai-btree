@@ -129,7 +129,7 @@ void BPlusTree::insert( const KeyType& key, ValueType value )
 void BPlusTree::start_new_tree( const KeyType& key, ValueType value )
 {
     LeafNode* new_leaf_node = new LeafNode( this, nullptr );
-    new_leaf_node->create_and_insert_record( key, value );
+    new_leaf_node->insert( key, value );
     m_root = new_leaf_node;
 }
 
@@ -141,7 +141,7 @@ void BPlusTree::insert_into_leaf( const KeyType& key, ValueType value )
     LeafNode* leaf_node = find_leaf_node( key );
     assert( leaf_node );
 
-    leaf_node->create_and_insert_record( key, value );
+    leaf_node->insert( key, value );
     if( leaf_node->size() > leaf_max_size() )
     {
         LeafNode* new_leaf = split( leaf_node );
@@ -231,8 +231,8 @@ void BPlusTree::remove_from_leaf( const KeyType& key )
         return;
     }
 
-    const std::size_t new_size = leafNode->remove_and_delete_record( key );
-    if( new_size < leaf_min_size() )
+    leafNode->remove( key );
+    if( leafNode->size() < leaf_min_size() )
     {
         coalesce_or_redistribute( leafNode );
     }
