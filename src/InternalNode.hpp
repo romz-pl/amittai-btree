@@ -1,6 +1,20 @@
 #ifndef ROMZ_AMITTAI_BTREE_INTERNALNODE_H
 #define ROMZ_AMITTAI_BTREE_INTERNALNODE_H
 
+//
+// 1. Let us consider a node containing m pointers (m <= n).
+//    Available indexes: i = 1, 2, ..., m.
+//
+// 2. For i = 2, 3, ..., (m − 1) pointer P_i points to the subtree that contains
+//    search-key values less than K_i and greater than or equal to K_{i−1}.
+//
+// 3. Pointer P_m points to the part of the subtree that contains those key values
+//    greater than or equal to K_{m−1}.
+//
+// 4. Pointer P_1 points to the part of the subtree that contains those
+//    search-key values less than K_1.
+//
+
 
 #include <vector>
 #include "Definitions.hpp"
