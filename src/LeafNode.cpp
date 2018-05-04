@@ -62,7 +62,7 @@ void LeafNode::set_next( LeafNode* next )
 //
 //
 //
-std::size_t LeafNode::create_and_insert_record( KeyType key, ValueType value )
+void LeafNode::create_and_insert_record( KeyType key, ValueType value )
 {
     assert( is_sorted() );
 
@@ -73,7 +73,6 @@ std::size_t LeafNode::create_and_insert_record( KeyType key, ValueType value )
         insert( key, new_record );
     }
     assert( is_sorted() );
-    return m_elt.size();
 }
 
 //

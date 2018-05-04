@@ -106,8 +106,8 @@ void BPlusTree::insert_into_leaf( KeyType key, ValueType value )
         throw std::runtime_error( "Leaf Not Found" );
     }
 
-    const std::size_t new_size = leaf_node->create_and_insert_record( key, value );
-    if( new_size > leaf_max_size() )
+    leaf_node->create_and_insert_record( key, value );
+    if( leaf_node->size() > leaf_max_size() )
     {
         LeafNode* new_leaf = split( leaf_node );
         new_leaf->set_next( leaf_node->next() );
