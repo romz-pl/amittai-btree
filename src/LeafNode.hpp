@@ -23,7 +23,7 @@ public:
     LeafNode* next() const;
     void set_next( LeafNode* next );
     void create_and_insert_record( const KeyType& key, ValueType value );
-    void insert( const KeyType& key, Record* record );
+
     Record* lookup( const KeyType& key ) const;
     std::size_t remove_and_delete_record( const KeyType& key );
     KeyType first_key() const;

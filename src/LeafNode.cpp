@@ -66,28 +66,20 @@ void LeafNode::create_and_insert_record( const KeyType& key, ValueType value )
 {
     assert( is_sorted() );
 
-    Record* existing_record = lookup( key );
-    if( !existing_record )
-    {
-        Record* new_record = new Record( value );
-        insert( key, new_record );
-    }
-    assert( is_sorted() );
-}
-
-//
-//
-//
-void LeafNode::insert( const KeyType& key, Record* record )
-{
-    assert( is_sorted() );
-
     const auto pred = [ key ]( const LeafElt& m ){ return m.m_key >= key; };
-    const auto insertion_point = std::find_if( m_elt.begin(), m_elt.end(), pred );
-    m_elt.insert( insertion_point, LeafElt( key, record ) );
+    const auto it = std::find_if( m_elt.begin(), m_elt.end(), pred );
+
+    if( it != m_elt.end() && it->m_key == key )
+    {
+        throw std::runtime_error( "Key duplication" );
+    }
+
+    Record* record = new Record( value );
+    m_elt.insert( it, LeafElt( key, record ) );
 
     assert( is_sorted() );
 }
+
 
 //
 //

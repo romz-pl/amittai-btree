@@ -174,8 +174,15 @@ TEST( btree, insert_random )
 
         if( x > threshold )
         {
-            smap.insert( std::make_pair( key, i ) );
-            ASSERT_NO_THROW( tree.insert( key, i ) );
+            const auto ret = smap.insert( std::make_pair( key, i ) );
+            if( ret.second )
+            {
+                ASSERT_NO_THROW( tree.insert( key, i ) );
+            }
+            else
+            {
+                ASSERT_ANY_THROW( tree.insert( key, i ) );
+            }
         }
         else
         {
@@ -213,8 +220,15 @@ TEST( btree, erase_random )
     for( std::size_t i = 0; i < iter_no; i++ )
     {
         const int64_t key( dist_int( rng ) );
-        smap.insert( std::make_pair( key, i ) );
-        ASSERT_NO_THROW( tree.insert( key, i ) );
+        const auto ret = smap.insert( std::make_pair( key, i ) );
+        if( ret.second )
+        {
+            ASSERT_NO_THROW( tree.insert( key, i ) );
+        }
+        else
+        {
+            ASSERT_ANY_THROW( tree.insert( key, i ) );
+        }
     }
 
     for( auto v : smap )
