@@ -14,7 +14,7 @@ class LeafNode : public Node
     friend class Printer;
 
 public:
-    LeafNode( BPlusTree *tree, InternalNode* get_parent );
+    LeafNode( BPlusTree *tree, InternalNode* parent );
     ~LeafNode();
 
     bool is_leaf() const override;
