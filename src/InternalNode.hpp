@@ -47,7 +47,7 @@ public:
     Node* first_child() const;
 
     void populate_new_root( Node* old_node, const KeyType& new_key, Node* new_node );
-    void insert_node_after( Node* old_node, const KeyType& new_key, Node* new_node );
+    void insert_after( Node* old_node, const KeyType& new_key, Node* new_node );
 
     void remove( std::size_t index );
     Node* remove_and_return_only_child();

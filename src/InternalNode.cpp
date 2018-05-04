@@ -85,7 +85,7 @@ void InternalNode::populate_new_root( Node *old_node, const KeyType& new_key, No
 //
 //
 //
-void InternalNode::insert_node_after( Node *old_node, const KeyType& new_key, Node *new_node )
+void InternalNode::insert_after( Node *old_node, const KeyType& new_key, Node *new_node )
 {
     // assert( is_sorted() );
 
