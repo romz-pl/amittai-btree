@@ -130,29 +130,16 @@ KeyType LeafNode::first_key() const
 //
 //
 //
-void LeafNode::move_half_to( LeafNode *recipient )
+void LeafNode::move_half( LeafNode *from, LeafNode *to )
 {
-    assert( is_sorted() );
+    assert( from->m_tree == to->m_tree );
 
-    recipient->copy_half_from( m_elt );
-    const auto beg = m_elt.begin() + m_tree->leaf_min_size();
-    m_elt.erase( beg, m_elt.end() );
+    const auto m = from->m_elt.begin() + from->m_tree->leaf_min_size();
+    const auto e = from->m_elt.end();
 
-    assert( is_sorted() );
-}
+    to->m_elt.insert( to->m_elt.end(), std::make_move_iterator( m ), std::make_move_iterator( e ) );
 
-//
-//
-//
-void LeafNode::copy_half_from(const std::vector< LeafElt > &ve )
-{
-    assert( is_sorted() );
-
-    m_elt.reserve( m_elt.size() + ve.size() - m_tree->leaf_min_size() );
-    const auto beg = ve.begin() + m_tree->leaf_min_size();
-    m_elt.insert( m_elt.end(), beg, ve.end() );
-
-    assert( is_sorted() );
+    from->m_elt.erase( m, e );
 }
 
 //

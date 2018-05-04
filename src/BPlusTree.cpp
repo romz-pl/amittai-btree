@@ -144,8 +144,11 @@ void BPlusTree::insert_into_leaf( const KeyType& key, ValueType value )
     leaf->insert( key, value );
     if( leaf->size() > leaf_max_size() )
     {
+        //
+        // Split the leaf node
+        //
         LeafNode* new_leaf = new LeafNode( this, leaf->get_parent() );
-        leaf->move_half_to( new_leaf );
+        LeafNode::move_half( leaf, new_leaf );
 
         new_leaf->set_next( leaf->next() );
         leaf->set_next( new_leaf );
