@@ -145,28 +145,15 @@ void LeafNode::move_half( LeafNode *from, LeafNode *to )
 //
 //
 //
-void LeafNode::move_all_to( LeafNode *recipient )
+void LeafNode::move_all( LeafNode *from, LeafNode *to )
 {
-    assert( is_sorted() );
+    const auto b = from->m_elt.begin();
+    const auto e = from->m_elt.end();
 
-    recipient->copy_all_from( m_elt );
-    m_elt.clear();
-    recipient->set_next( next() );
+    to->m_elt.insert( to->m_elt.end(), std::make_move_iterator( b ), std::make_move_iterator( e ) );
 
-    assert( is_sorted() );
-}
+    from->m_elt.clear( );
 
-//
-//
-//
-void LeafNode::copy_all_from(const std::vector< LeafElt > &ve )
-{
-    assert( is_sorted() );
-
-    m_elt.reserve( m_elt.size() + ve.size() );
-    m_elt.insert( m_elt.end(), ve.begin(), ve.end() );
-
-    assert( is_sorted() );
 }
 
 //
