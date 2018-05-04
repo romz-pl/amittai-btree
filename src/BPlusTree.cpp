@@ -64,11 +64,26 @@ Record* BPlusTree::search( KeyType key )
     }
 
     LeafNode* leaf_node = find_leaf_node( key );
-    if( !leaf_node )
-    {
-        return nullptr;
-    }
+    assert( leaf_node );
+
     return leaf_node->lookup( key );
+}
+
+//
+//
+//
+LeafNode* BPlusTree::find_leaf_node( KeyType key )
+{
+    assert( !is_empty() );
+
+    auto node = m_root;
+    while( !node->is_leaf() )
+    {
+        InternalNode* internalNode = node->internal();
+        node = internalNode->lookup( key );
+    }
+
+    return node->leaf();
 }
 
 
@@ -348,22 +363,7 @@ void BPlusTree::adjust_root()
     }
 }
 
-//
-//
-//
-LeafNode* BPlusTree::find_leaf_node( KeyType key )
-{
-    assert( !is_empty() );
 
-    auto node = m_root;
-    while( !node->is_leaf() )
-    {
-        InternalNode* internalNode = node->internal();
-        node = internalNode->lookup( key );
-    }
-
-    return node->leaf();
-}
 
 //
 //
