@@ -26,15 +26,15 @@ public:
     /// Print the value associated with a given key, along with the address
     /// at which the tree stores that value.
     /// @param[in] aVerbose Determines whether printing should include addresses.
-    void print_value( KeyType key, bool verbose = false );
+    void print_value( const KeyType& key, bool verbose = false );
 
     /// Print the path from the root to the leaf bearing key aKey.
     /// @param[in] aVerbose Determines whether printing should include addresses.
-    void print_path_to( KeyType key, bool verbose = false );
+    void print_path_to( const KeyType& key, bool verbose = false );
 
     /// Print key, value, and address for each item in the range
     /// from aStart to aEnd, including both.
-    void print_range( KeyType start, KeyType end );
+    void print_range( const KeyType& start, const KeyType& end );
 
     /// Read elements to be inserted into the B+ tree from a text file.
     /// Each new element should consist of a single integer on a line by itself.
@@ -48,13 +48,13 @@ private:
 
     using EntryType = std::tuple< KeyType, ValueType, LeafNode* >;
 
-    std::vector< EntryType > range( KeyType start, KeyType end );
-    LeafNode* find_leaf_node( KeyType key, bool printing = false, bool verbose = false );
-    void print_value( KeyType key, bool print_path, bool verbose );
+    std::vector< EntryType > range( const KeyType& start, const KeyType& end );
+    LeafNode* find_leaf_node( const KeyType& key, bool printing = false, bool verbose = false );
+    void print_value( const KeyType& key, bool print_path, bool verbose );
 
 
-    void leaf_node_copy_range_starting_from( LeafNode* leaf, KeyType key, std::vector< EntryType >& vector );
-    void leaf_node_copy_range_until( LeafNode* leaf, KeyType key, std::vector< EntryType >& vector );
+    void leaf_node_copy_range_starting_from( LeafNode* leaf, const KeyType& key, std::vector< EntryType >& vector );
+    void leaf_node_copy_range_until( LeafNode* leaf, const KeyType& key, std::vector< EntryType >& vector );
     void leaf_node_copy_range( LeafNode* leaf, std::vector< EntryType >& vector );
 
 

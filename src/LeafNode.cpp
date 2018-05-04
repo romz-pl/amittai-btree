@@ -62,7 +62,7 @@ void LeafNode::set_next( LeafNode* next )
 //
 //
 //
-void LeafNode::create_and_insert_record( KeyType key, ValueType value )
+void LeafNode::create_and_insert_record( const KeyType& key, ValueType value )
 {
     assert( is_sorted() );
 
@@ -78,7 +78,7 @@ void LeafNode::create_and_insert_record( KeyType key, ValueType value )
 //
 //
 //
-void LeafNode::insert( KeyType key, Record* record )
+void LeafNode::insert( const KeyType& key, Record* record )
 {
     assert( is_sorted() );
 
@@ -92,7 +92,7 @@ void LeafNode::insert( KeyType key, Record* record )
 //
 //
 //
-Record* LeafNode::lookup( KeyType key ) const
+Record* LeafNode::lookup( const KeyType& key ) const
 {
     const auto pred = [ key ]( const LeafElt& m ){ return m.m_key == key; };
     const auto it = std::find_if( m_elt.begin(), m_elt.end(), pred );
@@ -108,7 +108,7 @@ Record* LeafNode::lookup( KeyType key ) const
 //
 //
 //
-std::size_t LeafNode::remove_and_delete_record( KeyType key )
+std::size_t LeafNode::remove_and_delete_record( const KeyType& key )
 {
     assert( is_sorted() );
 

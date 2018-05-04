@@ -42,12 +42,12 @@ public:
 
 
     KeyType key_at( std::size_t index ) const;
-    void set_key_at( std::size_t index, KeyType key );
+    void set_key_at( std::size_t index, const KeyType& key );
 
     Node* first_child() const;
 
-    void populate_new_root( Node* old_node, KeyType new_key, Node* new_node );
-    void insert_node_after( Node* old_node, KeyType new_key, Node* new_node );
+    void populate_new_root( Node* old_node, const KeyType& new_key, Node* new_node );
+    void insert_node_after( Node* old_node, const KeyType& new_key, Node* new_node );
 
     void remove( std::size_t index );
     Node* remove_and_return_only_child();
@@ -60,7 +60,7 @@ public:
     void move_last_to_front_of( InternalNode* recipient, std::size_t parent_index );
 
 
-    Node* lookup( KeyType key ) const;
+    Node* lookup( const KeyType& key ) const;
     std::size_t node_index( Node* node ) const;
     Node* neighbor( std::size_t index ) const;
 

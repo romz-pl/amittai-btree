@@ -11,7 +11,7 @@ Io::Io( BPlusTree &tree )
 
 }
 
-LeafNode* Io::find_leaf_node( KeyType key, bool printing, bool verbose )
+LeafNode* Io::find_leaf_node( const KeyType& key, bool printing, bool verbose )
 {
     if (m_tree.is_empty()) {
         if (printing) {
@@ -69,12 +69,12 @@ void Io::print_leaves( bool verbose )
 
 
 
-void Io::print_value( KeyType key, bool verbose )
+void Io::print_value( const KeyType& key, bool verbose )
 {
     print_value(key, false, verbose);
 }
 
-void Io::print_value( KeyType key, bool print_path, bool verbose )
+void Io::print_value( const KeyType& key, bool print_path, bool verbose )
 {
     LeafNode* leaf = find_leaf_node(key, print_path, verbose);
     if (!leaf) {
@@ -97,12 +97,12 @@ void Io::print_value( KeyType key, bool print_path, bool verbose )
     std::cout << "\tKey: " << key.to_int64() << "   Value: " << record->value() << std::endl;
 }
 
-void Io::print_path_to( KeyType key, bool verbose )
+void Io::print_path_to( const KeyType& key, bool verbose )
 {
     print_value(key, true, verbose);
 }
 
-void Io::print_range( KeyType start, KeyType end )
+void Io::print_range( const KeyType& start, const KeyType& end )
 {
     auto rangeVector = range(start, end);
     for (auto entry : rangeVector) {
@@ -112,7 +112,7 @@ void Io::print_range( KeyType start, KeyType end )
     }
 }
 
-std::vector< Io::EntryType > Io::range( KeyType start, KeyType end )
+std::vector< Io::EntryType > Io::range( const KeyType& start, const KeyType& end )
 {
     auto startLeaf = find_leaf_node(start);
     auto endLeaf = find_leaf_node(end);
@@ -131,7 +131,7 @@ std::vector< Io::EntryType > Io::range( KeyType start, KeyType end )
     return entries;
 }
 
-void Io::leaf_node_copy_range_starting_from( LeafNode* leaf, KeyType key, std::vector< EntryType >& vector )
+void Io::leaf_node_copy_range_starting_from( LeafNode* leaf, const KeyType& key, std::vector< EntryType >& vector )
 {
     bool found = false;
     for (auto mapping : leaf->m_elt) {
@@ -144,7 +144,7 @@ void Io::leaf_node_copy_range_starting_from( LeafNode* leaf, KeyType key, std::v
     }
 }
 
-void Io::leaf_node_copy_range_until( LeafNode* leaf, KeyType key, std::vector< EntryType >& vector )
+void Io::leaf_node_copy_range_until( LeafNode* leaf, const KeyType& key, std::vector< EntryType >& vector )
 {
     bool found = false;
     for (auto mapping : leaf->m_elt) {

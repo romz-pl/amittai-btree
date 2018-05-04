@@ -53,7 +53,7 @@ KeyType InternalNode::key_at( std::size_t index ) const
 //
 //
 //
-void InternalNode::set_key_at( std::size_t index, KeyType key )
+void InternalNode::set_key_at( std::size_t index, const KeyType& key )
 {
     assert( index < m_elt.size() );
     m_elt[ index ].m_key = key;
@@ -71,7 +71,7 @@ Node* InternalNode::first_child() const
 //
 //
 //
-void InternalNode::populate_new_root( Node *old_node, KeyType new_key, Node *new_node )
+void InternalNode::populate_new_root( Node *old_node, const KeyType& new_key, Node *new_node )
 {
     // assert( is_sorted() );
 
@@ -85,7 +85,7 @@ void InternalNode::populate_new_root( Node *old_node, KeyType new_key, Node *new
 //
 //
 //
-void InternalNode::insert_node_after( Node *old_node, KeyType new_key, Node *new_node )
+void InternalNode::insert_node_after( Node *old_node, const KeyType& new_key, Node *new_node )
 {
     // assert( is_sorted() );
 
@@ -134,7 +134,7 @@ KeyType InternalNode::replace_and_return_first_key()
 {
     // assert( is_sorted() );
 
-    KeyType new_key = m_elt[ 0 ].m_key;
+    const KeyType new_key = m_elt[ 0 ].m_key;
     m_elt[ 0 ].m_key = KeyType( DUMMY_KEY );
 
     // assert( is_sorted() );
@@ -260,7 +260,7 @@ void InternalNode::copy_first_from( const InternalElt& pair, std::size_t parent_
 //
 //
 //
-Node* InternalNode::lookup( KeyType key ) const
+Node* InternalNode::lookup( const KeyType& key ) const
 {
 /*
     if( !is_sorted() )

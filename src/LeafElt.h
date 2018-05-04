@@ -7,7 +7,7 @@
 class LeafElt
 {
 public:
-    LeafElt( KeyType key, Record* record );
+    LeafElt( const KeyType &key, Record* record );
     ~LeafElt() = default;
 
 public:

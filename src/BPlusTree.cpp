@@ -56,7 +56,7 @@ bool BPlusTree::is_empty() const
 //
 //
 //
-Record* BPlusTree::search( KeyType key )
+Record* BPlusTree::search( const KeyType& key )
 {
     if( is_empty() )
     {
@@ -72,7 +72,7 @@ Record* BPlusTree::search( KeyType key )
 //
 //
 //
-LeafNode* BPlusTree::find_leaf_node( KeyType key )
+LeafNode* BPlusTree::find_leaf_node( const KeyType& key )
 {
     assert( !is_empty() );
 
@@ -94,7 +94,7 @@ LeafNode* BPlusTree::find_leaf_node( KeyType key )
 //
 //
 //
-void BPlusTree::insert( KeyType key, ValueType value )
+void BPlusTree::insert( const KeyType& key, ValueType value )
 {
     if( is_empty() )
     {
@@ -109,7 +109,7 @@ void BPlusTree::insert( KeyType key, ValueType value )
 //
 //
 //
-void BPlusTree::start_new_tree( KeyType key, ValueType value )
+void BPlusTree::start_new_tree( const KeyType& key, ValueType value )
 {
     LeafNode* new_leaf_node = new LeafNode( this, nullptr );
     new_leaf_node->create_and_insert_record( key, value );
@@ -119,7 +119,7 @@ void BPlusTree::start_new_tree( KeyType key, ValueType value )
 //
 //
 //
-void BPlusTree::insert_into_leaf( KeyType key, ValueType value )
+void BPlusTree::insert_into_leaf( const KeyType& key, ValueType value )
 {
     LeafNode* leaf_node = find_leaf_node( key );
     assert( leaf_node );
@@ -130,7 +130,7 @@ void BPlusTree::insert_into_leaf( KeyType key, ValueType value )
         LeafNode* new_leaf = split( leaf_node );
         new_leaf->set_next( leaf_node->next() );
         leaf_node->set_next( new_leaf );
-        KeyType newKey = new_leaf->first_key();
+        const KeyType newKey = new_leaf->first_key();
         insert_into_parent( leaf_node, newKey, new_leaf );
     }
 }
@@ -138,7 +138,7 @@ void BPlusTree::insert_into_leaf( KeyType key, ValueType value )
 //
 //
 //
-void BPlusTree::insert_into_parent(  Node *old_node, KeyType key, Node *new_node )
+void BPlusTree::insert_into_parent(  Node *old_node, const KeyType& key, Node *new_node )
 {
     if( old_node->is_root() )
     {
@@ -156,7 +156,7 @@ void BPlusTree::insert_into_parent(  Node *old_node, KeyType key, Node *new_node
         if( parent->size() > internal_max_size() )
         {
             InternalNode* new_node = split( parent );
-            KeyType new_key = new_node->replace_and_return_first_key();
+            const KeyType new_key = new_node->replace_and_return_first_key();
             insert_into_parent( parent, new_key, new_node );
         }
     }
@@ -189,7 +189,7 @@ InternalNode* BPlusTree::split( InternalNode* node )
 //
 //
 //
-void BPlusTree::remove( KeyType key )
+void BPlusTree::remove( const KeyType& key )
 {
     if( is_empty() )
     {
@@ -204,7 +204,7 @@ void BPlusTree::remove( KeyType key )
 //
 //
 //
-void BPlusTree::remove_from_leaf( KeyType key )
+void BPlusTree::remove_from_leaf( const KeyType& key )
 {
     LeafNode* leafNode = find_leaf_node( key );
     assert( leafNode );
