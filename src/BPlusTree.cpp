@@ -58,6 +58,11 @@ bool BPlusTree::is_empty() const
 //
 Record* BPlusTree::search( KeyType key )
 {
+    if( is_empty() )
+    {
+        return nullptr;
+    }
+
     LeafNode* leaf_node = find_leaf_node( key );
     if( !leaf_node )
     {
@@ -102,10 +107,7 @@ void BPlusTree::start_new_tree( KeyType key, ValueType value )
 void BPlusTree::insert_into_leaf( KeyType key, ValueType value )
 {
     LeafNode* leaf_node = find_leaf_node( key );
-    if( !leaf_node )
-    {
-        throw std::runtime_error( "Leaf Not Found" );
-    }
+    assert( leaf_node );
 
     leaf_node->create_and_insert_record( key, value );
     if( leaf_node->size() > leaf_max_size() )
@@ -190,10 +192,7 @@ void BPlusTree::remove( KeyType key )
 void BPlusTree::remove_from_leaf( KeyType key )
 {
     LeafNode* leafNode = find_leaf_node( key );
-    if( !leafNode )
-    {
-        return;
-    }
+    assert( leafNode );
 
     if( !leafNode->lookup( key ) )
     {
@@ -354,17 +353,16 @@ void BPlusTree::adjust_root()
 //
 LeafNode* BPlusTree::find_leaf_node( KeyType key )
 {
-    if( is_empty() )
-    {
-        return nullptr;
-    }
-    auto node = m_root;
+    assert( !is_empty() );
 
+    auto node = m_root;
     while( !node->is_leaf() )
     {
-        auto internalNode = node->internal();
+        InternalNode* internalNode = node->internal();
         node = internalNode->lookup( key );
     }
+
+    assert( node->is_leaf() );
     return node->leaf();
 }
 
