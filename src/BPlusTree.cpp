@@ -128,9 +128,9 @@ void BPlusTree::insert( const KeyType& key, ValueType value )
 //
 void BPlusTree::start_new_tree( const KeyType& key, ValueType value )
 {
-    LeafNode* new_leaf_node = new LeafNode( this, nullptr );
-    new_leaf_node->insert( key, value );
-    m_root = new_leaf_node;
+    LeafNode* new_leaf = new LeafNode( this, nullptr );
+    new_leaf->insert( key, value );
+    m_root = new_leaf;
 }
 
 //
@@ -138,19 +138,20 @@ void BPlusTree::start_new_tree( const KeyType& key, ValueType value )
 //
 void BPlusTree::insert_into_leaf( const KeyType& key, ValueType value )
 {
-    LeafNode* leaf_node = find_leaf_node( key );
-    assert( leaf_node );
+    LeafNode* leaf = find_leaf_node( key );
+    assert( leaf );
 
-    leaf_node->insert( key, value );
-    if( leaf_node->size() > leaf_max_size() )
+    leaf->insert( key, value );
+    if( leaf->size() > leaf_max_size() )
     {
-        LeafNode* new_leaf = new LeafNode( this, leaf_node->get_parent() );
-        leaf_node->move_half_to( new_leaf );
+        LeafNode* new_leaf = new LeafNode( this, leaf->get_parent() );
+        leaf->move_half_to( new_leaf );
 
-        new_leaf->set_next( leaf_node->next() );
-        leaf_node->set_next( new_leaf );
-        const KeyType newKey = new_leaf->first_key();
-        insert_into_parent( leaf_node, newKey, new_leaf );
+        new_leaf->set_next( leaf->next() );
+        leaf->set_next( new_leaf );
+
+        const KeyType new_key = new_leaf->first_key();
+        insert_into_parent( leaf, new_key, new_leaf );
     }
 }
 
@@ -174,11 +175,11 @@ void BPlusTree::insert_into_parent(  Node *old_node, const KeyType& key, Node *n
         parent->insert_after( old_node, key, new_node );
         if( parent->size() > internal_max_size() )
         {
-            InternalNode* new_node = new InternalNode( this, parent->get_parent() );
-            parent->move_half_to( new_node );
+            InternalNode* new_parent = new InternalNode( this, parent->get_parent() );
+            parent->move_half_to( new_parent );
 
-            const KeyType new_key = new_node->replace_and_return_first_key();
-            insert_into_parent( parent, new_key, new_node );
+            const KeyType new_key = new_parent->replace_and_return_first_key();
+            insert_into_parent( parent, new_key, new_parent );
         }
     }
 }
