@@ -144,7 +144,9 @@ void BPlusTree::insert_into_leaf( const KeyType& key, ValueType value )
     leaf_node->insert( key, value );
     if( leaf_node->size() > leaf_max_size() )
     {
-        LeafNode* new_leaf = split( leaf_node );
+        LeafNode* new_leaf = new LeafNode( this, leaf_node->get_parent() );
+        leaf_node->move_half_to( new_leaf );
+
         new_leaf->set_next( leaf_node->next() );
         leaf_node->set_next( new_leaf );
         const KeyType newKey = new_leaf->first_key();
@@ -172,32 +174,15 @@ void BPlusTree::insert_into_parent(  Node *old_node, const KeyType& key, Node *n
         parent->insert_after( old_node, key, new_node );
         if( parent->size() > internal_max_size() )
         {
-            InternalNode* new_node = split( parent );
+            InternalNode* new_node = new InternalNode( this, parent->get_parent() );
+            parent->move_half_to( new_node );
+
             const KeyType new_key = new_node->replace_and_return_first_key();
             insert_into_parent( parent, new_key, new_node );
         }
     }
 }
 
-//
-//
-//
-LeafNode* BPlusTree::split( LeafNode* node )
-{
-    LeafNode* new_node = new LeafNode( this, node->get_parent() );
-    node->move_half_to( new_node );
-    return new_node;
-}
-
-//
-//
-//
-InternalNode* BPlusTree::split( InternalNode* node )
-{
-    InternalNode* new_node = new InternalNode( this, node->get_parent() );
-    node->move_half_to( new_node );
-    return new_node;
-}
 
 //
 // REMOVAL

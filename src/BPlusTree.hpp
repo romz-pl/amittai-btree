@@ -52,9 +52,6 @@ private:
     void insert_into_parent( Node* old_node, const KeyType& key, Node* new_node );
     void remove_from_leaf( const KeyType& key );
 
-    LeafNode* split( LeafNode* node );
-    InternalNode* split( InternalNode* node );
-
     void coalesce_or_redistribute( LeafNode* node );
     void coalesce_or_redistribute( InternalNode* node );
 
