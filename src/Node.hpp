@@ -14,7 +14,7 @@ public:
     virtual ~Node() = default;
 
     InternalNode* get_parent();
-    const InternalNode* get_parent() const;
+    // const InternalNode* get_parent() const;
     void set_parent( InternalNode* parent );
 
     bool is_root() const;
