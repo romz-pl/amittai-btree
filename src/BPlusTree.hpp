@@ -67,7 +67,8 @@ private:
     LeafNode *find_leaf_node( const KeyType& key );
     const LeafNode *find_leaf_node( const KeyType& key ) const;
 
-private:
+// private:
+public:
     const std::size_t m_order;
     Node* m_root;
 };
