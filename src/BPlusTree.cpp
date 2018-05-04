@@ -1,5 +1,6 @@
 #include <stdexcept>
 #include <algorithm>
+#include <cassert>
 #include "BPlusTree.hpp"
 #include "InternalNode.hpp"
 #include "LeafNode.hpp"
@@ -122,17 +123,18 @@ void BPlusTree::insert_into_leaf( KeyType key, ValueType value )
 //
 void BPlusTree::insert_into_parent(  Node *old_node, KeyType key, Node *new_node )
 {
-    InternalNode* parent = old_node->get_parent();
-    if (parent == nullptr)
+    if( old_node->is_root() )
     {
-        m_root = new InternalNode( this, nullptr );
-        parent = m_root->internal();
-        old_node->set_parent( parent );
-        new_node->set_parent( parent );
-        parent->populate_new_root( old_node, key, new_node );
+        InternalNode* new_root = new InternalNode( this, nullptr );
+        old_node->set_parent( new_root );
+        new_node->set_parent( new_root );
+        new_root->populate_new_root( old_node, key, new_node );
+        m_root = new_root;
     }
     else
     {
+        InternalNode* parent = old_node->get_parent();
+        assert( parent );
         const std::size_t new_size = parent->insert_node_after( old_node, key, new_node );
         if( new_size > internal_max_size() )
         {
