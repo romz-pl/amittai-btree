@@ -362,7 +362,6 @@ LeafNode* BPlusTree::find_leaf_node( KeyType key )
         node = internalNode->lookup( key );
     }
 
-    assert( node->is_leaf() );
     return node->leaf();
 }
 
