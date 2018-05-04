@@ -394,7 +394,8 @@ std::size_t BPlusTree::leaf_max_size() const
 //
 std::size_t BPlusTree::internal_min_size() const
 {
-    return ( m_order + 1 ) / 2;
+    // return ( m_order + 1 ) / 2;
+    return m_order / 2;
 }
 
 //
