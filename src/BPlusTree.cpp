@@ -311,7 +311,8 @@ void BPlusTree::coalesce( InternalNode* neighbor_node, InternalNode* node, Inter
         index = 1;
     }
 
-    node->move_all_to( neighbor_node, index );
+    InternalNode::move_all( node, neighbor_node, index );
+
     parent->remove( index );
 
     if( parent->size() < internal_min_size() )

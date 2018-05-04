@@ -165,31 +165,22 @@ void InternalNode::move_half( InternalNode *from, InternalNode *to )
 //
 //
 //
-void InternalNode::move_all_to( InternalNode *recipient, std::size_t index_in_parent )
+void InternalNode::move_all( InternalNode *from, InternalNode *to, std::size_t index_in_parent )
 {
-    // assert( is_sorted() );
+    from->m_elt[ 0 ].m_key = from->get_parent()->key_at( index_in_parent );
 
-    m_elt[ 0 ].m_key = get_parent()->key_at( index_in_parent );
-    recipient->copy_all_from( m_elt );
-    m_elt.clear();
+    const auto b = from->m_elt.begin();
+    const auto e = from->m_elt.end();
 
-    // assert( is_sorted() );
-}
-
-//
-//
-//
-void InternalNode::copy_all_from(const std::vector< InternalElt >& ve )
-{
-    // assert( is_sorted() );
-
-    for( auto m : ve )
+    for( auto it = b; it != e; ++it )
     {
-        m.m_node->set_parent( this );
-        m_elt.push_back( m );
+        assert( it->m_node->get_parent() == from );
+        it->m_node->set_parent( to );
     }
 
-    // assert( is_sorted() );
+    to->m_elt.insert( to->m_elt.end(), std::make_move_iterator( b ), std::make_move_iterator( e ) );
+
+    from->m_elt.clear();
 }
 
 //
